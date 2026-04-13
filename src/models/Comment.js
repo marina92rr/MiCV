@@ -2,19 +2,17 @@ import mongoose, { mongo } from "mongoose";
 
 //Modelo de usuario
 const commentSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
     required: true,
-  },
-  level: {
-    type: String,
   },
   comment: {
     type: String,
     required: true
   },
   like: {
-    type: Boolean
+    type: Boolean,
+    default: false,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

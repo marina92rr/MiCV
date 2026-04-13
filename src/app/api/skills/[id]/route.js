@@ -1,23 +1,23 @@
 
 import { connectDB } from "@/lib/mongodb";
-import Project from "@/models/Project";
+import Skill from "@/models/Skill";
 import { NextResponse } from "next/server";
 
-//GET /api/proyects/[id] --> Devuelve un proyecto por ID
+//GET /api/skills/[id] --> Devuelve una habilidad por ID
 export async function GET(request, {params}) {
     try {
         await connectDB();
         const {id} = await params;
         
-        const projectID = await Project.findById(id);
-        return NextResponse.json(projectID, { status: 200 });
+        const skillID = await Skill.findById(id);
+        return NextResponse.json(skillID, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({error: 'No se ha obtenido el proyecto'})
+        return NextResponse.json({error: 'No se ha obtenido la habilidad'})
     }
 }
 
-// PUT /api/proyects/[id] --> Actualiza un proyecto por ID
+// PUT /api/skills/[id] --> Actualiza una habilidad por ID
 export async function PUT(request, {params}) {
     try {
         await connectDB();
@@ -29,34 +29,30 @@ export async function PUT(request, {params}) {
             id,
             {
                 title: body.title,
-                imageProject: body.imageProject,
-                urlProject: body.urlProject,
-                description: body.description,
+                level: body.level,
                 userId: body.userId,
-                categoryId: body.categoryId,
-                skills: body.skills,
             }
         );
         return NextResponse.json(projectUpdate);
 
     } catch (error) {
-        return NextResponse.json({error: 'Error al actualizar el proyecto'})
+        return NextResponse.json({error: 'Error al actualizar la habilidad'})
     }
     
 }
 
-// DELETE /api/proyects/[id] --> Elimina un proyecto por ID
+// DELETE /api/skills/[id] --> Elimina una habilidad por ID
 export async function DELETE(request, { params }) {
     try {
         await connectDB();
         const { id } = await params; 
-        const result = await Project.findByIdAndDelete(id);
+        const result = await Skill.findByIdAndDelete(id);
 
         if (!result) {
-            return NextResponse.json({ error: "No se encontró el proyecto" }, { status: 404 });
+            return NextResponse.json({ error: "No se encontró la habilidad" }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Proyecto eliminado" });
+        return NextResponse.json({ message: "Habilidad eliminada" });
 
     } catch (error) {
 

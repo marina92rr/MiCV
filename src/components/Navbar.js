@@ -4,18 +4,31 @@ import Link from 'next/link'  //Link menu
 
 export default function Navbar() {
     return (
-        <nav className='h-16 rounded-4xl gap-4 w-200 font-bold text-gray-700 bg-gray-200 shadow'>
-            <ul className='flex justify-center items-center gap-4 h-full'>
-                <li className='hover:text-gray-950'>
+        <nav className='h-16'>
+
+            <ul className='flex absolute left-0 top-0 p-4 gap-4'>
+                <li>
+                    <Link href="/login">Login</Link>
+                </li>
+                <li>
+                    <Link href="/register">Registrar</Link>
+                </li>
+            </ul>
+
+            <ul className='flex absolute right-0 top-0 p-4 gap-4'>
+                <li className='className="hover:text-purple-600 transition"'>
                     <Link href="/">Inicio</Link>
                 </li>
-                <li className='hover:text-gray-950'>
+                <li className='className="hover:text-purple-600 transition"'>
+                    <Link href="/">Sobre mí</Link>
+                </li>
+                <li className='className="hover:text-purple-600 transition"'>
                     <Link href="/myProjects">Proyectos</Link>
                 </li>
-                <li className='hover:text-gray-950'>
+                <li className='className="hover:text-purple-600 transition"'>
                     <Link href="/mySkills">Skills</Link>
                 </li>
-                <li className='hover:text-gray-950'>
+                <li className='className="hover:text-purple-600 transition"'>
                     <Link href="/contact">Contacto</Link>
                 </li>
             </ul>

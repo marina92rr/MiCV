@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
-import { signToken } from "@/lib/auth";
+import { signToken } from "@/middlewares/auth";
 import User from "@/models/User";
 
 export async function POST(request) {
