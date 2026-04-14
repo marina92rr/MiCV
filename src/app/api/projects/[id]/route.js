@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 
-//GET /api/proyects/[id] --> Devuelve un proyecto por ID
+//GET /api/projects/[id] --> Devuelve un proyecto por ID
 export async function GET(request, {params}) {
     try {
         await connectDB();
@@ -17,7 +17,7 @@ export async function GET(request, {params}) {
     }
 }
 
-// PUT /api/proyects/[id] --> Actualiza un proyecto por ID
+// PUT /api/projects/[id] --> Actualiza un proyecto por ID
 export async function PUT(request, {params}) {
     try {
         await connectDB();
@@ -29,11 +29,9 @@ export async function PUT(request, {params}) {
             id,
             {
                 title: body.title,
-                imageProject: body.imageProject,
                 urlProject: body.urlProject,
                 description: body.description,
                 userId: body.userId,
-                categoryId: body.categoryId,
                 skills: body.skills,
             }
         );
@@ -45,7 +43,7 @@ export async function PUT(request, {params}) {
     
 }
 
-// DELETE /api/proyects/[id] --> Elimina un proyecto por ID
+// DELETE /api/projects/[id] --> Elimina un proyecto por ID
 export async function DELETE(request, { params }) {
     try {
         await connectDB();

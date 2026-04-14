@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+
 
 export default function Login() {
     const [loading, setLoading] = useState(false);
@@ -37,8 +40,10 @@ export default function Login() {
                 return;
             }
 
-            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("user", JSON.stringify(data.user));        //Guarda usuario
+            localStorage.setItem("token", data.token);                  //Guarda token
             window.dispatchEvent(new Event("userChanged"));
+            toast.success(`Bienvenido, ${data.user.name}!`);
 
             router.push("/");
         } catch (error) {

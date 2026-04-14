@@ -22,11 +22,7 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
+
     skills: [
       {
         type: mongoose.Schema.Types.ObjectId,

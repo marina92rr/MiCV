@@ -30,6 +30,7 @@ export async function PUT(request, {params}) {
             {
                 title: body.title,
                 level: body.level,
+                icon: body.icon,
                 userId: body.userId,
             }
         );

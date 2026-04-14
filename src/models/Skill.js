@@ -12,6 +12,10 @@ const skillSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    icon: {
+        type: String,
+        required: true
+    },
     userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
