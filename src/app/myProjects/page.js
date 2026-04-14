@@ -1,10 +1,10 @@
 
 export default function MyProjects() {
   return (
-    <>
-    <h1>Mis proyectos</h1>
-    
-    </>
+    <div className="w-full flex justify-center">
+      <h1>Proyectos</h1>
+      
+    </div>
   );
 }
 

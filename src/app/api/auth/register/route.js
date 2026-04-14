@@ -5,7 +5,7 @@ import User from "@/models/User";
 
 export async function POST(request) {
   try {
-    const { name, email, password, bio, isAdmin } = await request.json();
+    const { name, lastname, email, password, bio, isAdmin } = await request.json();
 
     await connectDB();
 
@@ -13,6 +13,7 @@ export async function POST(request) {
 
     const user = await User.create({
       name,
+      lastname,
       email,
       password: hashedPassword,
       bio,
@@ -23,6 +24,7 @@ export async function POST(request) {
       user: {
         id: user._id,
         name: user.name,
+        lastname: user.lastname,
         email: user.email,
         bio: user.bio,
         isAdmin: user.isAdmin,

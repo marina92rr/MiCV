@@ -1,0 +1,5 @@
+
+MONGODB_URI=mongodb+srv://marina92rr_db:45944278F@cei-fullstack.4fiv3pg.mongodb.net/mycv
+JWT_SECRET=MySecretKey123459876
+
+WEB: https://www.figma.com/design/6Et4CcYQfNq25aqGY4zTsd/Personal-Portfolio-Website-Template--Community-?node-id=0-1&p=f&t=zyqBQ0oo5nEg5Km5-0
