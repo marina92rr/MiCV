@@ -44,8 +44,8 @@ export default function UpdateSkill({ skill, onUpdated }) {
 
   return (
     <>
-      <button onClick={() => setOpen(true)} className="text-blue-500">
-        Editar
+      <button onClick={() => setOpen(true)} className="text-amber-500 cursor-pointer">
+        <i className="bi bi-pencil-square text-xl"></i>
       </button>
 
       {open && (
@@ -53,33 +53,35 @@ export default function UpdateSkill({ skill, onUpdated }) {
           className="fixed inset-0 bg-black/50 flex items-center justify-center"
           onClick={() => setOpen(false)}
         >
-          <div
-            className="bg-white p-6 rounded-xl w-[400px] shadow-lg"
+          <div className="bg-white p-6 rounded-xl w-xs  lg:w-100 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-start">
+              <h2 className="text-2xl text-center font-bold font-serif mb-4">Actualizar Skill</h2>
+              <label >Nombre:</label>
+
               <input
                 name="name"
                 defaultValue={skill.name}
-                className="border p-2 rounded-md"
+                className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-
+              <label >Nivel:</label>
               <input
                 name="level"
                 defaultValue={skill.level}
-                className="border p-2 rounded-md"
+                className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-
+              <label>Icono:</label>
               <input
                 name="icon"
                 defaultValue={skill.icon}
-                className="border p-2 rounded-md"
+                className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                className="bg-amber-500 my-4 font-bold text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors cursor-pointer"
               >
                 {loading ? "Guardando..." : "Actualizar"}
               </button>

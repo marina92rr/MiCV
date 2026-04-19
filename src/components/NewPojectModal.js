@@ -50,51 +50,88 @@ export default function NewProjectModal({ open, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center"  onClick={onClose}>
-      <div className="bg-white p-6 rounded-xl w-[400px] shadow-lg"  onClick={(e) => e.stopPropagation()}>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center"
+      onClick={onClose}
+    >
+      <div className="bg-white p-4 m-4 rounded-xl lg:w-125 shadow-lg" onClick={(e) => e.stopPropagation()}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <h2 className="text-2xl text-center font-bold font-serif mb-4">Añadir nuevo Proyecto</h2>
+          <label >Título:</label>
           <input
             name="title"
-            placeholder="Título"
-            className="border p-2 rounded-md"
+            placeholder="Star..."
+            className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
-
+          <label >Descripción:</label>
           <textarea
             name="description"
-            placeholder="Descripción"
-            className="border p-2 rounded-md"
+            placeholder="Este proyecto..."
+            className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
-
+          <label >Enlace:</label>
           <input
             name="urlProject"
-            placeholder="URL GitHub"
-            className="border p-2 rounded-md"
+            placeholder="URL GitHub..."
+            className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
+          <div className="flex justify-center flex-wrap text-center gap-4">
+            <div className="flex flex-col">
+              <label>Logo:</label>
+              <label className="cursor-pointer border mt-4 text-amber-700 border-amber-700 rounded-md p-2 hover:text-amber-500 hover:border-amber-500 transition">
+                Seleccionar
+                <input
+                  type="file"
+                  name="logoProject"
+                  className="hidden"
+                />
+              </label>
+            </div>
 
-          <input
-            name="imageProject"
-            type="file"
-            accept="image/*"
-          />
+            <div className="flex flex-col">
+              <label>Imagen:</label>
+              <label className="cursor-pointer border mt-4 text-amber-700 border-amber-700 rounded-md p-2 hover:text-amber-500 hover:border-amber-500 transition">
+                Seleccionar
+                <input
+                  type="file"
+                  name="imageProject"
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+          <label>Skills:</label>
 
-          <select
-            multiple
-            onChange={(e) =>
-              setSelected([...e.target.selectedOptions].map((o) => o.value))
-            }
-            className="border p-2 h-24"
-          >
-            {skills.map((s) => (
-              <option key={s._id} value={s._id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex flex-wrap gap-2">
+            {skills.map((skill) => {
+              const active = selected.includes(skill._id);
+
+              return (
+                <button
+                  type="button"
+                  key={skill._id}
+                  onClick={() =>
+                    setSelected((prev) =>
+                      active
+                        ? prev.filter((id) => id !== skill._id) // quitar
+                        : [...prev, skill._id] // añadir
+                    )
+                  }
+                  className={`px-3 py-1 rounded-full border transition
+                              ${active
+                      ? "bg-amber-500 text-white border-amber-500"
+                      : "bg-white text-black border-gray-300 hover:border-amber-400"
+                    }`}
+                >
+                  {skill.name}
+                </button>
+              );
+            })}
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            className="bg-amber-500 font-bold text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-colors cursor-pointer"
           >
             {loading ? "Guardando..." : "Guardar"}
           </button>

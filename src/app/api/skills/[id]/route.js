@@ -25,7 +25,7 @@ export async function PUT(request, {params}) {
 
         const body = await request.json();
         
-        const projectUpdate = await Project.findByIdAndUpdate(
+        const skillUpdate = await Skill.findByIdAndUpdate(
             id,
             {
                 title: body.title,
@@ -34,7 +34,7 @@ export async function PUT(request, {params}) {
                 userId: body.userId,
             }
         );
-        return NextResponse.json(projectUpdate);
+        return NextResponse.json(skillUpdate);
 
     } catch (error) {
         return NextResponse.json({error: 'Error al actualizar la habilidad'})

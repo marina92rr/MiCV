@@ -1,33 +1,29 @@
-import { useEffect, useState } from "react";
+"use client";
+
 import NewSkillModal from "./NewSkillModal";
+import useAuth from "@/hooks/useAuth";
+import useOpenClose from "@/hooks/useOpenClose";
 
+export default function AddNewSkill({ onCreated }) {
+    const { isOpen, open, close } = useOpenClose();
+    const { user } = useAuth();
 
-
-
-export default function AddNewSkill() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
-    }, []);
-
-
+    if (!user?.isAdmin) return null;
 
     return (
         <>
-            {user?.isAdmin && (
-                <button onClick={() => setIsOpen(true)}>
-                    Añadir Skill
-                </button>
-            )}
+            <button
+                onClick={open}
+                className="bg-amber-500 p-3 text-white rounded-lg shadow-md hover:bg-amber-600 transition-colors cursor-pointer"
+            >
+                Añadir Skill
+            </button>
 
             <NewSkillModal
                 open={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={close}
+                onCreated={onCreated}
             />
         </>
-
     );
 }

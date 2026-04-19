@@ -1,31 +1,24 @@
 import { useEffect, useState } from "react";
 import NewProjectModal from "./NewPojectModal";
-
-
-
+import useAuth from "@/hooks/useAuth";
+import useOpenClose from "@/hooks/useOpenClose";
 
 export default function AddNewProject() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
-    }, []);
-
-
+    const{isOpen,open, close} = useOpenClose();
+    const {user} = useAuth();
 
     return (
         <>
             {user?.isAdmin && (
-                <button onClick={() => setIsOpen(true)}>
+                <button onClick={open}
+                    className="bg-amber-500 p-3 text-white rounded-lg shadow-md hover:bg-amber-600 transition-colors cursor-pointer">
                     Añadir proyecto
                 </button>
             )}
 
             <NewProjectModal
                 open={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={close}
             />
         </>
 

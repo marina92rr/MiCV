@@ -2,19 +2,18 @@
 
 import { toast } from "sonner";
 
-export default function DeleteSkill({ id, onDeleted }) {
-  function handleDelete() {
-    toast("¿Eliminar skill?", {
+export default function DeleteComent({ id, token, onDeleted }) {
+  async function handleDelete() {
+    toast("¿Eliminar comentario?", {
       description: "Esta acción no se puede deshacer.",
-
       action: {
         label: "Eliminar",
         onClick: async () => {
           try {
-            const res = await fetch(`/api/skills/${id}`, {
+            const res = await fetch(`/api/comments/${id}`, {
               method: "DELETE",
               headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${token}`,
               },
             });
 
@@ -22,10 +21,10 @@ export default function DeleteSkill({ id, onDeleted }) {
             console.log(data);
 
             if (res.ok) {
-              toast.success("Skill eliminada correctamente");
+              toast.success("Comentario eliminado correctamente");
               onDeleted?.();
             } else {
-              toast.error("Error al eliminar la skill");
+              toast.error(data.error || "Error al eliminar el comentario");
             }
           } catch (error) {
             console.log(error);
@@ -33,7 +32,6 @@ export default function DeleteSkill({ id, onDeleted }) {
           }
         },
       },
-
       cancel: {
         label: "Cancelar",
       },

@@ -2,35 +2,43 @@
 import { connectDB } from "@/lib/mongodb";
 import Comment from "@/models/Comment";
 import { NextResponse } from "next/server";
+import { verifyToken } from "@/middlewares/auth";
 
 //GET/api/comments/[id]   --> Conseguir datos comentario id
-export async function GET(request, {params}) {
-    try {
-        await connectDB();
-        const {id} = await params;
-        
-        const commentID = await Comment.findById(id);
-        return NextResponse.json(commentID, { status: 200 });
+export async function GET(request) {
+  try {
+    await connectDB();
 
-    } catch (error) {
-        return NextResponse.json({error: 'No se ha obtenido el comentario'})
-    }
+    const { searchParams } = new URL(request.url);
+    const projectId = searchParams.get("projectId");
+
+    const comments = await Comment.find({ projectId })
+      .populate("userId", "name _id") // 🔥 importante
+      .sort({ createdAt: -1 });
+
+    return NextResponse.json(comments, { status: 200 });
+
+  } catch (error) {
+    return NextResponse.json(
+      { error: "No se han obtenido los comentarios" },
+      { status: 500 }
+    );
+  }
 }
 
 //PUT/api/comments/[id] --> Actualizar comentario por id
-export async function PUT(request, {params}) {
+export async function PUT(request, { params }) {
     try {
         await connectDB();
-        const {id} = await params;
+        const { id } = await params;
 
         const body = await request.json();
-        
+
         const commentUpdate = await Comment.findByIdAndUpdate(
             id,
             {
                 title: body.title,
                 comment: body.comment,
-                like: body.like,
                 userId: body.userId,
                 projectId: body.projectId,
             }
@@ -38,29 +46,50 @@ export async function PUT(request, {params}) {
         return NextResponse.json(commentUpdate);
 
     } catch (error) {
-        return NextResponse.json({error: 'Error al actualizar el comentario'})
+        return NextResponse.json({ error: 'Error al actualizar el comentario' })
     }
-    
+
 }
 
 //DELETE/api/comments/[id] --> Eliminar comentario por id
 export async function DELETE(request, { params }) {
     try {
         await connectDB();
-        const { id } = await params; 
-        const result = await Comment.findByIdAndDelete(id);
 
-        if (!result) {
-            return NextResponse.json({ error: "No se encontró el comentario" }, { status: 404 });
+        const { id } = await params;
+
+        // 🔐 sacar token
+        const authHeader = request.headers.get("authorization");
+        const token = authHeader?.split(" ")[1];
+
+        if (!token) {
+            return NextResponse.json({ error: "No autenticado" }, { status: 401 });
         }
 
-        return NextResponse.json({ message: "Comentario eliminado" });
+        const decoded = verifyToken(token);
+
+        if (!decoded?.userId) {
+            return NextResponse.json({ error: "Token inválido" }, { status: 401 });
+        }
+
+        // 🔍 buscar comentario
+        const comment = await Comment.findById(id);
+
+        if (!comment) {
+            return NextResponse.json({ error: "No existe" }, { status: 404 });
+        }
+
+        // 🔥 comprobar que es suyo
+        if (comment.userId.toString() !== decoded.userId) {
+            return NextResponse.json({ error: "No puedes borrar esto" }, { status: 403 });
+        }
+
+        // 🗑️ borrar
+        await Comment.findByIdAndDelete(id);
+
+        return NextResponse.json({ message: "Eliminado" });
 
     } catch (error) {
-
-        return NextResponse.json(
-            { error: "Error al eliminar", details: error.message }, 
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "Error al eliminar" }, { status: 500 });
     }
 }

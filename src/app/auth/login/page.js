@@ -55,8 +55,9 @@ export default function Login() {
     }
 
     return (
-        <div className="flex justify-center">
-            <form className="flex flex-col gap-4 w-full max-w-xs" onSubmit={handleSubmit}>
+        <div className=" lg:bg-amber-500 min-h-screen">
+            <h1 className="font-serif text-4xl text-center p-25 lg:text-6xl lg:text-white">Iniciar sesión</h1>
+            <form className="flex flex-col gap-4 m-auto w-full lg:bg-white lg:rounded-xl max-w-xs  lg:max-w-md justify-center lg:p-10 lg:shadow-md" onSubmit={handleSubmit}>
                 <label>Email:</label>
                 <input
                     className="bg-gray-200 rounded-md p-2"
@@ -73,7 +74,7 @@ export default function Login() {
                 />
 
                 <button
-                    className="bg-green-500 hover:bg-green-400 p-2 rounded-xl text-white font-bold cursor-pointer"
+                    className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer"
                     type="submit"
                     disabled={loading}
                 >

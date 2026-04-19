@@ -1,83 +1,113 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import LoginLogout from "./LoginLogout";
+import useOpenClose from "@/hooks/useOpenClose";
 
 export default function Navbar() {
-    const [user, setUser] = useState(null);
-    const router = useRouter();
+    const { isOpen, close, toggle, contentRef } = useOpenClose();
+    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
-        function loadUser() {
-            const storedUser = localStorage.getItem("user");
-            if (storedUser) {
-                setUser(JSON.parse(storedUser));
-            } else {
-                setUser(null);
-            }
-        }
-
-        loadUser();
-        window.addEventListener("userChanged", loadUser);
-
-        return () => {
-            window.removeEventListener("userChanged", loadUser);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
         };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    function handleLogout() {
-        localStorage.removeItem("user");
-        setUser(null);
-        window.dispatchEvent(new Event("userChanged"));
-        router.push("/");
-    }
-
     return (
-        <nav className='h-16'>
-            <ul className='flex absolute left-0 top-0 p-4 gap-4'>
-                {user ? (
-                    <>
-                        <li>
-                            <span>{user.name}</span>
-                        </li>
-                        <li>
-                            <button
-                                onClick={handleLogout}
-                                className="text-red-500 hover:text-red-600 transition"
-                            >
-                                Logout
-                            </button>
-                        </li>
-                    </>
-                ) : (
-                    <>
-                        <li>
-                            <Link href="/auth/login">Login</Link>
-                        </li>
-                        <li>
-                            <Link href="/auth/register">Registrar</Link>
-                        </li>
-                    </>
-                )}
+        <nav
+            className={`
+                fixed w-full flex justify-between items-center h-15 px-6 transition-all duration-300 z-50
+                bg-amber-300
+                ${
+                    scrolled
+                        ? "lg:bg-white lg:shadow-md"
+                        : "lg:bg-transparent lg:shadow-none"
+                }
+            `}
+        >
+            {/* LG */}
+            <div className="hidden lg:flex gap-4">
+                <LoginLogout/>
+            </div>
+
+            <ul className="hidden lg:flex gap-10 items-center">
+                <li><Link href="/">Inicio</Link></li>
+                <li><Link href="/about">Sobre mí</Link></li>
+                <li><Link href="/myProjects">Proyectos</Link></li>
+                <li><Link href="/mySkills">Skills</Link></li>
             </ul>
 
-            <ul className='flex absolute right-0 top-0 p-4 gap-4'>
-                <li className="hover:text-purple-600 transition">
-                    <Link href="/">Inicio</Link>
-                </li>
-                <li className="hover:text-purple-600 transition">
-                    <Link href="/">Sobre mí</Link>
-                </li>
-                <li className="hover:text-purple-600 transition">
-                    <Link href="/myProjects">Proyectos</Link>
-                </li>
-                <li className="hover:text-purple-600 transition">
-                    <Link href="/mySkills">Skills</Link>
-                </li>
-                <li className="hover:text-purple-600 transition">
-                    <Link href="/contact">Contacto</Link>
-                </li>
-            </ul>
+            {/* BOTÓN HAMBURGUESA */}
+            <button
+                className="lg:hidden text-amber-50 font-bold text-3xl ml-auto"
+                onClick={toggle}
+            >
+                ☰
+            </button>
+
+            {/* MENÚ Móvil */}
+            {isOpen && (
+                <div className="fixed inset-0 bg-black/30 lg:hidden">
+                    <div
+                        ref={contentRef}
+                        className="absolute top-0 left-0 w-full h-screen bg-white flex flex-col"
+                    >
+                        {/* X */}
+                        <div className="flex justify-end p-6">
+                            <button
+                                onClick={close}
+                                className="text-3xl"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        {/* LOGIN Móvil */}
+                        <div className="flex flex-col items-center mb-6 text-xl">
+                            <LoginLogout close={close}/>
+                        </div>
+
+                        {/* LINKS Móvil*/}
+                        <ul className="flex flex-col items-center gap-8 text-xl">
+                            <li>
+                                <Link href="/" onClick={close}>
+                                    Inicio
+                                </Link>
+                            </li>
+
+                            <li>
+                                <Link href="/about" onClick={close}>
+                                    Sobre mí
+                                </Link>
+                            </li>
+
+                            <li>
+                                <Link href="/myProjects" onClick={close}>
+                                    Proyectos
+                                </Link>
+                            </li>
+
+                            <li>
+                                <Link href="/mySkills" onClick={close}>
+                                    Skills
+                                </Link>
+                            </li>
+
+                            <li>
+                                <Link href="/contact" onClick={close}>
+                                    Contacto
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 }

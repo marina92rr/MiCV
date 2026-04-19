@@ -1,11 +1,17 @@
 "use client";
 
 import AddNewProject from "@/components/AddNewProject";
+import DeleteProject from "@/components/DeleteProject";
+import UpdateProject from "@/components/UpdateProject";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import useAuth from "@/hooks/useAuth";
+
 
 export default function MyProjects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { isAdmin } = useAuth();
 
   async function fetchProjects() {
     try {
@@ -34,48 +40,88 @@ export default function MyProjects() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <h1 className="text-2xl font-bold mb-4">Proyectos</h1>
+    <div className="w-full flex flex-col bg-gray-100 items-center  min-h-screen">
+      <h1 className="font-serif text-4xl mt-20 lg:text-6xl">Proyectos</h1>
+      <div className="w-40 h-1 bg-yellow-400 mx-auto rounded-full mt-4"></div>
 
-      <div className="mb-6">
-        <AddNewProject />
-      </div>
+      {isAdmin && (
+        <div className="mt-7">
+          <AddNewProject />
+        </div>
+      )}
 
-      <div className="flex justify-center gap-3 w-full">
-        {loading ? (
-          <span>Cargando...</span>
-        ) : (
-          <div className="flex flex-wrap justify-center">
-            {projects.map((project) => (
-              <div
-                className="border rounded-xl border-red-200 m-4 p-3 w-60 text-center"
-                key={project._id}
-              >
-                <div className="text-start">
-                  <p><strong>{project.title}</strong></p>
-                  <p>{project.description}</p>
-                  <p>{Array.isArray(project.skills) ? project.skills.join(", ") : ""}</p>
-                </div>
+      <div>
+        <section className="my-10 flex justify-center ">
+          <div>
+            {loading ? (
+              <p className="text-center mt-15">Cargando proyectos...</p>
+            ) : projects.length === 0 ? (
+              <p className="text-center">No hay proyectos disponibles.</p>
+            ) : (
+              <div className="m-6 flex flex-col lg:max-w-300 gap-10">
+                {projects.map((project, index) => (
+                  <div
+                    key={project._id}
+                    className="grid overflow-hidden bg-white shadow-md rounded-3xl hover:shadow-lg transition lg:grid-cols-2"
+                  >
+                    <div
+                      className={`
+                        p-7 flex flex-col justify-center 
+                        ${index % 2 === 0
+                          ? "lg:order-1 lg:items-start lg:text-left"
+                          : "lg:order-2 lg:items-end lg:text-right"}
+                      `}
+                    >
 
-                <picture className="flex justify-center">
-                  <img
-                    src={`/projects/${project.imageProject}`}
-                    alt={project.title}
-                  />
+                      <h3 className="font-serif text-center text-3xl font-bold">{project.title}</h3>
+                      <div className="flex justify-center gap-2 flex-wrap mt-4">
+                        {project.skills?.map((s) => (
+                          <span key={s._id} className="bg-gray-200 shadow px-3 py-1 rounded-full text-sm">
+                            {s.name}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="mt-4 text-gray-600">
+                        {project.description.length > 120
+                          ? project.description.slice(0, 120) + "..."
+                          : project.description}
+                      </p>
 
-                  <a href={project.urlProject} target="_blank">
-                    Ver proyecto
-                  </a>
-                </picture>
+                      <Link
+                        href={`/myProjects/${project._id}`}
+                        className={`self-center bg-white shadow px-6 py-2 mt-6 border border-black rounded-full hover:bg-amber-500 hover:text-white hover:border-amber-500 transition
+                          ${index % 2 === 0 ? "lg:self-start" : "lg:self-end"}`}
+                      >
+                        Ver proyecto
+                      </Link>
+                      {isAdmin && (
+                        <div className="flex gap-2 mt-6 justify-end">
+                          <UpdateProject project={project} onUpdated={fetchProjects} />
+                          <DeleteProject id={project._id} onDeleted={fetchProjects} />
+                        </div>
+                      )}
 
-                <div className="flex gap-2 justify-end">
-                  {/* <DeleteProject id={project._id} />
-                  <UpdateProject id={project._id} /> */}
-                </div>
+                    </div>
+
+                    <div
+                      className={`bg-white flex items-center justify-center p-0 ${index % 2 === 0 ? "lg:order-2" : "lg:order-1"
+                        }`}
+                    >
+                      <img
+                        src={`/projects/${project.logoProject}`}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                  </div>
+
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
+
+        </section>
       </div>
     </div>
   );
