@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
-//Modelo de usuario
+//Modelo de poyecto
+//Proyecto: Título, Imagen, logo, url GitHub, descripción, ID usuario, array skills
 const projectSchema = new mongoose.Schema(
   {
     title: {
@@ -34,8 +35,9 @@ const projectSchema = new mongoose.Schema(
     ],
   },
   {
-    timestamps: true,   //Tiempo createAt + updateAt
+    timestamps: true,   //Tiempo creación + actualización
   },
 );
 
+//Exportar
 export default mongoose.models.Project || mongoose.model("Project", projectSchema);

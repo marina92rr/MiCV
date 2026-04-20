@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import Skill from "@/models/Skill";
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/middlewares/auth";
+import { verifyToken } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 

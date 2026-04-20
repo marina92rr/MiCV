@@ -26,6 +26,7 @@ export async function POST(request) {
         const body = await request.json();
         const newUser = await User.create({
             name: body.name,
+            lasname: body.lastname,
             email: body.email,
             photo: body.photo,
             password: body.password,

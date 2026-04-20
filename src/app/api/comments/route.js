@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import Comment from "@/models/Comment";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/middlewares/auth";
+import { verifyToken } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +14,7 @@ export async function GET(request) {
     const projectId = searchParams.get("projectId");
 
     const comments = await Comment.find({ projectId })
-        .populate("userId", "name")
+        .populate("userId", "name lastname")
         .sort({ createdAt: -1 });
 
     return NextResponse.json(comments);

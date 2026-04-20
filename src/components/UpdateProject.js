@@ -1,38 +1,52 @@
 "use client";
 
+import useOpenClose from "@/hooks/useOpenClose";
 import { useEffect, useState } from "react";
 
+// Actualizar proyecto
 export default function UpdateProject({ project, onUpdated }) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const { isOpen, open, close, contentRef } = useOpenClose();   //Hook abrir/cerrar
+  const [loading, setLoading] = useState(false);  //Carga
+
+  // Lista de skills usadas
   const [skills, setSkills] = useState([]);
+
+  // Skills seleccionadas en el proyecto
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    if (!open) return;
+    // si el modal esta abierto cargar skill
+    if (!isOpen) return;
 
     fetch("/api/skills")
       .then((r) => r.json())
       .then((data) => {
+        // Guardar skills
         setSkills(Array.isArray(data) ? data : []);
 
+        // Obtener ids de skills actuales del proyecto
         const currentSkills = (project.skills || []).map((s) => {
           if (typeof s === "string") return s;
           if (s?._id) return String(s._id);
           return "";
         });
 
+        // Guardar skills seleccionadas
         setSelected(currentSkills.filter(Boolean));
       })
       .catch(console.error);
-  }, [open, project]);
+  }, [isOpen, project]);
 
+  // Enviar formulario actualizado
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
 
+    // Recoger datos del formulario
     const form = new FormData(e.target);
 
+    // Datos actualizados del proyecto
     const projectData = {
       title: form.get("title"),
       description: form.get("description"),
@@ -41,6 +55,7 @@ export default function UpdateProject({ project, onUpdated }) {
     };
 
     try {
+      // Petición para actualizar proyecto
       const res = await fetch(`/api/projects/${project._id}`, {
         method: "PUT",
         headers: {
@@ -53,9 +68,10 @@ export default function UpdateProject({ project, onUpdated }) {
       const data = await res.json();
       console.log(data);
 
+      // Si actualiza correctamente
       if (res.ok) {
-        setOpen(false);
-        onUpdated?.();
+        close();        //Cerrar modal
+        onUpdated?.();  //recargar proyectos
       }
     } catch (error) {
       console.log(error);
@@ -66,49 +82,54 @@ export default function UpdateProject({ project, onUpdated }) {
 
   return (
     <>
+      {/* Botón abrir formulario */}
       <button
-        onClick={() => setOpen(true)}
+        onClick={open}
         className="text-amber-500 cursor-pointer"
       >
         <i className="bi bi-pencil-square text-xl"></i>
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center"
-          onClick={() => setOpen(false)}
-        >
+      {/* Abrir modal */}
+      {isOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div
+            ref={contentRef}
             className="bg-white p-6 rounded-xl w-100 shadow-lg"
-            onClick={(e) => e.stopPropagation()}
           >
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-start">
+            {/* Formulario */}
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-4 text-start"
+            >
               <h2 className="text-2xl text-center font-bold font-serif mb-4">
                 Actualizar Proyecto
               </h2>
-
+              {/* Título */}
               <label>Título:</label>
               <input
                 name="title"
                 defaultValue={project.title}
                 className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-
+              {/* Descripción */}
               <label>Descripción:</label>
               <textarea
                 name="description"
                 defaultValue={project.description}
                 className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-
+              {/* Enlace GitHub */}
               <label>Enlace:</label>
               <input
                 name="urlProject"
                 defaultValue={project.urlProject}
                 className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-
+              {/* Skills */}
               <label>Skills:</label>
+
+              {/* Botones de selección de skills */}
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill) => {
                   const skillId = String(skill._id);
@@ -125,11 +146,10 @@ export default function UpdateProject({ project, onUpdated }) {
                             : [...prev, skillId]
                         )
                       }
-                      className={`px-4 py-2 rounded-xl border transition cursor-pointer ${
-                        active
+                      className={`px-4 py-2 rounded-xl border transition cursor-pointer ${active
                           ? "bg-amber-600 text-white border-amber-600"
                           : "bg-white text-black border-gray-300 hover:border-amber-400 hover:text-amber-400"
-                      }`}
+                        }`}
                     >
                       {skill.name}
                     </button>
@@ -137,6 +157,7 @@ export default function UpdateProject({ project, onUpdated }) {
                 })}
               </div>
 
+              {/* Guardar actualización */}
               <button
                 type="submit"
                 disabled={loading}

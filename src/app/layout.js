@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { roboto, serif } from "./fonts";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -23,7 +24,9 @@ export default function RootLayout({ children }) {
           {children}
           <Toaster position="top-center" richColors />
         </main>
-        <footer></footer>
+        <footer>
+          <Footer/>
+        </footer>
       </body>
     </html>
   );

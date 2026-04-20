@@ -2,7 +2,7 @@
 import { connectDB } from "@/lib/mongodb";
 import Comment from "@/models/Comment";
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/middlewares/auth";
+import { verifyToken } from "@/lib/auth";
 
 //GET/api/comments/[id]   --> Conseguir datos comentario id
 export async function GET(request) {
@@ -13,7 +13,7 @@ export async function GET(request) {
     const projectId = searchParams.get("projectId");
 
     const comments = await Comment.find({ projectId })
-      .populate("userId", "name _id") // 🔥 importante
+      .populate("userId", "name lastname _id") 
       .sort({ createdAt: -1 });
 
     return NextResponse.json(comments, { status: 200 });
@@ -24,31 +24,6 @@ export async function GET(request) {
       { status: 500 }
     );
   }
-}
-
-//PUT/api/comments/[id] --> Actualizar comentario por id
-export async function PUT(request, { params }) {
-    try {
-        await connectDB();
-        const { id } = await params;
-
-        const body = await request.json();
-
-        const commentUpdate = await Comment.findByIdAndUpdate(
-            id,
-            {
-                title: body.title,
-                comment: body.comment,
-                userId: body.userId,
-                projectId: body.projectId,
-            }
-        );
-        return NextResponse.json(commentUpdate);
-
-    } catch (error) {
-        return NextResponse.json({ error: 'Error al actualizar el comentario' })
-    }
-
 }
 
 //DELETE/api/comments/[id] --> Eliminar comentario por id

@@ -10,9 +10,9 @@ export default async function ProjectPage({ params }) {
   const project = await res.json();
 
   return (
-    <div className="bg-gray-100 ">
-      <div className="w-[90%] lg:w-[80%] mx-auto flex flex-col items-center">
-        <h1 className="font-serif text-4xl mt-25 lg:text-6xl">{project.title}</h1>
+    <div className="bg-gray-100 py-40">
+      <div className="w-[90%] lg:w-[70%] mx-auto flex flex-col items-center">
+        <h1 className="font-serif text-4xl lg:text-6xl">{project.title}</h1>
         <div className="w-40 h-1 bg-yellow-400 mx-auto rounded-full my-5"></div>
         <div className="flex gap-2 flex-wrap my-5">
           {project.skills?.map((s) => (
@@ -48,8 +48,11 @@ export default async function ProjectPage({ params }) {
         >
           Ir a GitHub
         </a>
-        {/* 🔥 COMENTARIOS */}
-        <CommentByProject projectId={id} />
+        {/* COMENTARIOS */}
+        
+          <CommentByProject projectId={id} />
+       
+
       </div>
 
     </div>

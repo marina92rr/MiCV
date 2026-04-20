@@ -1,7 +1,8 @@
 
 import mongoose from 'mongoose';
 
-// Modelo de usuario
+// Modelo de Skills
+//Skill = Nombre, nivel, icono, ID usuario
 const skillSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -22,4 +23,6 @@ const skillSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+//Exportar
 export default mongoose.models.Skill || mongoose.model('Skill', skillSchema);

@@ -38,24 +38,24 @@ export default function MySkills() {
     }, []);
 
     return (
-        <div className="w-full flex flex-col items-center bg-gray-50 min-h-screen">
-            <h1 className="font-serif text-4xl mt-20 lg:text-6xl">Skills</h1>
+        <div className="py-40 bg-gray-50 text-center">
+            <h1 className="font-serif text-4xl lg:text-6xl">Skills</h1>
             <div className="w-40 h-1 bg-yellow-400 mx-auto rounded-full mt-4"></div>
-
+            {/* Botón Añadir Skill */}
             {isAdmin && (
                 <div className="mt-7">
                     <AddNewSkill onCreated={fetchSkills} />
                 </div>
             )}
-
-            <div className="my-10 flex justify-around flex-wrap">
+            
+            <div className="w-full my-10 lg:w-[70%] mx-auto">
                 {loading ? (
                     <span>Cargando...</span>
                 ) : (
-                    <div className="flex flex-wrap justify-center">
+                    <div className="flex flex-wrap justify-center gap-7">
                         {skills.map((skill) => (
                             <div
-                                className="rounded-xl shadow-md m-4 p-3 w-60 text-center bg-white"
+                                className="rounded-lg shadow-md p-3 w-60 text-center bg-white"
                                 key={skill._id}
                             >
                                 <picture className="flex justify-center">

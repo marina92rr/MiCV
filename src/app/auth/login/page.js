@@ -55,8 +55,9 @@ export default function Login() {
     }
 
     return (
-        <div className=" lg:bg-amber-500 min-h-screen">
-            <h1 className="font-serif text-4xl text-center p-25 lg:text-6xl lg:text-white">Iniciar sesión</h1>
+        <div className=" lg:bg-amber-500 py-40 min-h-screen">
+            <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">
+                Iniciar sesión</h1>
             <form className="flex flex-col gap-4 m-auto w-full lg:bg-white lg:rounded-xl max-w-xs  lg:max-w-md justify-center lg:p-10 lg:shadow-md" onSubmit={handleSubmit}>
                 <label>Email:</label>
                 <input

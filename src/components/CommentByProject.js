@@ -99,7 +99,7 @@ export default function CommentByProject({ projectId }) {
 
             <div className="flex justify-between items-center">
               <p className="text-amber-500">
-                {coment.userId?.name}
+                {coment.userId?.name} {coment.userId?.lastname}
               </p>
 
               {(user?._id === coment.userId?._id ||

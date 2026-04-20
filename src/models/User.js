@@ -1,7 +1,8 @@
 
 import mongoose, { mongo } from 'mongoose';
 
-//Modelo de usuario
+//Modelo de Usuario
+//Usuario: Nombre, apellidos, email, contraseña, Administrador
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -15,16 +16,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    photo: {
-        type: String,
-    },
+
     password: {
         type: String,
         required: true
     },
-    bio: {
-        type: String,
-    },
+
     isAdmin: {
         type : Boolean,
         default: false
@@ -32,4 +29,5 @@ const userSchema = new mongoose.Schema({
     
 })
 
+//Exportar
 export default mongoose.models.User || mongoose.model('User', userSchema);

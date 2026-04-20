@@ -3,10 +3,12 @@ import NewProjectModal from "./NewPojectModal";
 import useAuth from "@/hooks/useAuth";
 import useOpenClose from "@/hooks/useOpenClose";
 
+//Añadir nuevo proyecto
 export default function AddNewProject() {
-    const{isOpen,open, close} = useOpenClose();
-    const {user} = useAuth();
+    const{isOpen,open, close} = useOpenClose(); //hook abrir/cerrar modal
+    const {user} = useAuth();   //Usuario
 
+    //Si es admin aparece boton
     return (
         <>
             {user?.isAdmin && (
@@ -15,7 +17,7 @@ export default function AddNewProject() {
                     Añadir proyecto
                 </button>
             )}
-
+            {/* Modal */}
             <NewProjectModal
                 open={isOpen}
                 onClose={close}

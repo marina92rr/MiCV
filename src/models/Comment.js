@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//Modelo Comentarios - Admin/userRegister
+//Comentarios: Título, Comentario, ID usuario, ID proyecto
 const commentSchema = new mongoose.Schema(
   {
     title: {
@@ -10,7 +12,6 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -23,9 +24,9 @@ const commentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true,
+    timestamps: true,         //Fecha de creación
   }
 );
 
-// 🔥 ESTA LÍNEA ES LA CLAVE
+//Exportar
 export default mongoose.models.Comment || mongoose.model("Comment", commentSchema);

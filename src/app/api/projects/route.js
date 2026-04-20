@@ -9,7 +9,7 @@ import { writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
 
-import { verifyToken } from "@/middlewares/auth";
+import { verifyToken } from "@/lib/auth";
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +19,7 @@ export async function GET() {
 
     const projects = await Project.find()
       .populate("skills", "name")
-      .populate("userId", "name");
+      .populate("userId", "name lastname");
 
     const formattedProjects = projects.map((project) => {
       const obj = project.toObject();

@@ -24,16 +24,15 @@ export default function Navbar() {
             className={`
                 fixed w-full flex justify-between items-center h-15 px-6 transition-all duration-300 z-50
                 bg-amber-300
-                ${
-                    scrolled
-                        ? "lg:bg-white lg:shadow-md"
-                        : "lg:bg-transparent lg:shadow-none"
+                ${scrolled
+                    ? "lg:bg-white lg:shadow-md"
+                    : "lg:bg-transparent lg:shadow-none"
                 }
             `}
         >
             {/* LG */}
             <div className="hidden lg:flex gap-4">
-                <LoginLogout/>
+                <LoginLogout />
             </div>
 
             <ul className="hidden lg:flex gap-10 items-center">
@@ -41,6 +40,7 @@ export default function Navbar() {
                 <li><Link href="/about">Sobre mí</Link></li>
                 <li><Link href="/myProjects">Proyectos</Link></li>
                 <li><Link href="/mySkills">Skills</Link></li>
+                <li><Link href="/contact">Contacto</Link></li>
             </ul>
 
             {/* BOTÓN HAMBURGUESA */}
@@ -70,40 +70,16 @@ export default function Navbar() {
 
                         {/* LOGIN Móvil */}
                         <div className="flex flex-col items-center mb-6 text-xl">
-                            <LoginLogout close={close}/>
+                            <LoginLogout close={close} />
                         </div>
 
                         {/* LINKS Móvil*/}
                         <ul className="flex flex-col items-center gap-8 text-xl">
-                            <li>
-                                <Link href="/" onClick={close}>
-                                    Inicio
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link href="/about" onClick={close}>
-                                    Sobre mí
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link href="/myProjects" onClick={close}>
-                                    Proyectos
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link href="/mySkills" onClick={close}>
-                                    Skills
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link href="/contact" onClick={close}>
-                                    Contacto
-                                </Link>
-                            </li>
+                            <li><Link href="/" onClick={close}>Inicio</Link></li>
+                            <li><Link href="/about" onClick={close}>Sobre mí</Link></li>
+                            <li><Link href="/myProjects" onClick={close}>Proyectos</Link></li>
+                            <li><Link href="/mySkills" onClick={close}>Skills</Link></li>
+                            <li><Link href="/contact" onClick={close}>Contacto</Link></li>
                         </ul>
                     </div>
                 </div>
