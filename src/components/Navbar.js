@@ -1,21 +1,24 @@
 "use client";
 
+//Menú principal - header
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoginLogout from "./LoginLogout";
 import useOpenClose from "@/hooks/useOpenClose";
 
 export default function Navbar() {
-    const { isOpen, close, toggle, contentRef } = useOpenClose();
-    const [scrolled, setScrolled] = useState(false);
+    const { isOpen, close, toggle, contentRef } = useOpenClose();   //Hook abrir/cerrar
+    const [scrolled, setScrolled] = useState(false);            //Estado de scroll
 
     useEffect(() => {
+        //Detectar el scroll
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > 50);   //si scroll baja mas de 50px pasa a true
         };
 
-        window.addEventListener("scroll", handleScroll);
-
+        window.addEventListener("scroll", handleScroll);    //Escucha el scroll
+        //Limpia 
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
@@ -30,11 +33,12 @@ export default function Navbar() {
                 }
             `}
         >
-            {/* LG */}
+            {/* LG - Pantalla grande */}
+            {/* IZQUIERDA */}
             <div className="hidden lg:flex gap-4">
                 <LoginLogout />
             </div>
-
+            {/* DERECHA */}
             <ul className="hidden lg:flex gap-10 items-center">
                 <li><Link href="/">Inicio</Link></li>
                 <li><Link href="/about">Sobre mí</Link></li>
@@ -43,6 +47,7 @@ export default function Navbar() {
                 <li><Link href="/contact">Contacto</Link></li>
             </ul>
 
+            {/* Responsive */}
             {/* BOTÓN HAMBURGUESA */}
             <button
                 className="lg:hidden text-amber-50 font-bold text-3xl ml-auto"
@@ -51,7 +56,7 @@ export default function Navbar() {
                 ☰
             </button>
 
-            {/* MENÚ Móvil */}
+            {/* menu centrado - si esta abierto */}
             {isOpen && (
                 <div className="fixed inset-0 bg-black/30 lg:hidden">
                     <div
@@ -68,12 +73,12 @@ export default function Navbar() {
                             </button>
                         </div>
 
-                        {/* LOGIN Móvil */}
+                        {/* FLEX */}
                         <div className="flex flex-col items-center mb-6 text-xl">
                             <LoginLogout close={close} />
                         </div>
 
-                        {/* LINKS Móvil*/}
+                        {/* COL*/}
                         <ul className="flex flex-col items-center gap-8 text-xl">
                             <li><Link href="/" onClick={close}>Inicio</Link></li>
                             <li><Link href="/about" onClick={close}>Sobre mí</Link></li>

@@ -1,16 +1,20 @@
 "use client";
 
+//Login y logout de la web
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function LoginLogout({ close }) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);     //Estado usuario
     const router = useRouter();
 
+
     useEffect(() => {
+        //Lectura de usuario
         function loadUser() {
             const storedUser = localStorage.getItem("user");
+            //Si existe usuario lo carga
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
             } else {
@@ -18,28 +22,32 @@ export default function LoginLogout({ close }) {
             }
         }
 
-        loadUser();
-        window.addEventListener("userChanged", loadUser);
+        loadUser(); //Cargar usuario al iniciar
+        window.addEventListener("userChanged", loadUser);   //Escuchar cambios de usuario
 
+        //Limpiar
         return () => {
             window.removeEventListener("userChanged", loadUser);
         };
     }, []);
 
+    //Desloguearse
     function handleLogout() {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem("token");   //Limpiar token del local
+        localStorage.removeItem("user");    //Limpiar user del local
 
+        //Recargar página
         setUser(null);
         window.dispatchEvent(new Event("userChanged"));
 
         close?.(); // cierre menú si existe
 
-        router.push("/");
+        router.push("/");   //Inicio
     }
 
     return (
         <ul className="flex gap-4 lg:gap-15">
+            {/* Si esta logueado Nombre de usuario, y boton logout */}
             {user ? (
                 <>
                     <li className="text-amber-400 lg:text-xl lg:font-bold">
@@ -54,8 +62,10 @@ export default function LoginLogout({ close }) {
                         </button>
                     </li>
                 </>
+
             ) : (
                 <>
+                    {/* Si no esta logueado aparece link Login o Register */}
                     <li className="hover:text-amber-400 transition text-xl">
                         <Link href="/auth/login" onClick={close}>Login</Link>
                     </li>

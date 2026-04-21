@@ -1,25 +1,27 @@
 "use client";
-import { toast } from "sonner";
+
+//Eliminar proyecto
+import { toast } from "sonner"; //Libreria de mensajería
 
 export default function DeleteProject({ id, onDeleted }) {
+  //Función eliminar proyecto
   async function handleDelete() {
+    //Mensajería para confirmar que se elimine el proyecto
     toast("¿Eliminar proyecto?", {
       description: "Esta acción no se puede deshacer.",
-
+      //Acción eliminar
       action: {
         label: "Eliminar",
         onClick: async () => {
           try {
+            //Llamada a API con ID para eliminar el proyecto
             const res = await fetch(`/api/projects/${id}`, {
               method: "DELETE",
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             });
-
-            const data = await res.json();
-            console.log(data);
-
+            //Mensaje de eliminado
             if (res.ok) {
               toast.success("Proyecto eliminado correctamente");
               onDeleted?.();
@@ -32,7 +34,7 @@ export default function DeleteProject({ id, onDeleted }) {
           }
         },
       },
-
+      //Acción cancelar
       cancel: {
         label: "Cancelar",
       },

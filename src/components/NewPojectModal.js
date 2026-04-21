@@ -1,15 +1,17 @@
 "use client";
 
+import useOpenClose from "@/hooks/useOpenClose";
 import { useEffect, useState } from "react";
 
-export default function NewProjectModal({ open, onClose }) {
-  const [skills, setSkills] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [loading, setLoading] = useState(false);
-
+export default function NewProjectModal() {
+  const [skills, setSkills] = useState([]); //Guardar skills
+  const [selected, setSelected] = useState([]); //Seleccionar skill
+  const [loading, setLoading] = useState(false);    
+  const {open, close} = useOpenClose();   //Hook abrir/ cerrar
+  
+  //Cargar API para lectura de las skills
   useEffect(() => {
-    if (!open) return;
-
+    if (!open) return;  //Si no esta abierto el modal retorna
     fetch("/api/skills")
       .then((r) => r.json())
       .then(setSkills)
@@ -18,13 +20,16 @@ export default function NewProjectModal({ open, onClose }) {
 
   if (!open) return null;
 
+  //enviar datos de formulario
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); //valor
     setLoading(true);
 
+    //Crear formdata
     const form = new FormData(e.target);
-    selected.forEach((id) => form.append("skills", id));
+    selected.forEach((id) => form.append("skills", id));  //Recorrer las skill
 
+    //API para enviar los datos del proyecto a la bbdd
     try {
       const res = await fetch("/api/projects", {
         method: "POST",
@@ -33,14 +38,11 @@ export default function NewProjectModal({ open, onClose }) {
         },
         body: form,
       });
-
-      const data = await res.json();
-      console.log(data);
-
+      //Si se envia se resetea los valores del form, selección de skill y modal se cierra
       if (res.ok) {
         e.target.reset();
         setSelected([]);
-        onClose();
+        close();
       }
     } catch (error) {
       console.log(error);
@@ -51,23 +53,29 @@ export default function NewProjectModal({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center"
-      onClick={onClose}
+      onClick={close}
     >
       <div className="bg-white p-4 m-4 rounded-xl lg:w-125 shadow-lg" onClick={(e) => e.stopPropagation()}>
+        
+        Formulario Añadir proyecto
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <h2 className="text-2xl text-center font-bold font-serif mb-4">Añadir nuevo Proyecto</h2>
+          
+          {/* Título */}
           <label >Título:</label>
           <input
             name="title"
             placeholder="Star..."
             className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
+          {/* Descripción */}
           <label >Descripción:</label>
           <textarea
             name="description"
             placeholder="Este proyecto..."
             className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
+          {/* Enlace para GitHub */}
           <label >Enlace:</label>
           <input
             name="urlProject"
@@ -75,6 +83,8 @@ export default function NewProjectModal({ open, onClose }) {
             className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
           <div className="flex justify-center flex-wrap text-center gap-4">
+           
+           {/* Logo de la empresa */}
             <div className="flex flex-col">
               <label>Logo:</label>
               <label className="cursor-pointer border mt-4 text-amber-700 border-amber-700 rounded-md p-2 hover:text-amber-500 hover:border-amber-500 transition">
@@ -86,7 +96,7 @@ export default function NewProjectModal({ open, onClose }) {
                 />
               </label>
             </div>
-
+            {/* Imagen de la web */}
             <div className="flex flex-col">
               <label>Imagen:</label>
               <label className="cursor-pointer border mt-4 text-amber-700 border-amber-700 rounded-md p-2 hover:text-amber-500 hover:border-amber-500 transition">
@@ -99,12 +109,14 @@ export default function NewProjectModal({ open, onClose }) {
               </label>
             </div>
           </div>
+
+          {/* Seleccion múltiple botones de skills */}
           <label>Skills:</label>
 
           <div className="flex flex-wrap gap-2">
+            {/* Recorre todas las skills según id */}
             {skills.map((skill) => {
               const active = selected.includes(skill._id);
-
               return (
                 <button
                   type="button"
@@ -127,7 +139,7 @@ export default function NewProjectModal({ open, onClose }) {
               );
             })}
           </div>
-
+          {/* Enviar formulario a BBDD */}
           <button
             type="submit"
             disabled={loading}
