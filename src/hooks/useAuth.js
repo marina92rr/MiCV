@@ -18,16 +18,16 @@ export default function useAuth() {
       //Si existe usuario guardarlo
       setUser(
         storedUser &&
-        storedUser !== "null" &&
-        storedUser !== "undefined"
+          storedUser !== "null" &&
+          storedUser !== "undefined"
           ? JSON.parse(storedUser)
           : null
       );
       //Si existe token guardarlo
       setToken(
         storedToken &&
-        storedToken !== "null" &&
-        storedToken !== "undefined"
+          storedToken !== "null" &&
+          storedToken !== "undefined"
           ? storedToken
           : null
       );

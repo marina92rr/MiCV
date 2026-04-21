@@ -2,6 +2,7 @@
 
 import useOpenClose from "@/hooks/useOpenClose";
 import { useState } from "react";
+import { toast } from "sonner";
 
 //Actualizar Skill
 export default function UpdateSkill({ skill, onUpdated }) {
@@ -34,16 +35,17 @@ export default function UpdateSkill({ skill, onUpdated }) {
       });
 
       const data = await res.json();
-      console.log(data);
-      //Si actualiza, cerrar modal
+
+      // Si se elimina aparece mensaje de confirmación
       if (res.ok) {
-        close();
-        if (onUpdated) onUpdated();   //Recargar skill
+        toast.success("Skill actualizada correctamente");
+        onDeleted?.();
+      } else {
+        toast.error(data.error || "Error al actualizar Skill");
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
+      toast.error("Error de conexión");
     }
   }
 
@@ -59,7 +61,7 @@ export default function UpdateSkill({ skill, onUpdated }) {
           className="fixed inset-0 bg-black/50 flex items-center justify-center"
         >
           <div className="bg-white p-6 rounded-xl w-xs  lg:w-100 shadow-lg"
-           ref={contentRef}
+            ref={contentRef}
           >
             {/* Formulario actualización */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-start">

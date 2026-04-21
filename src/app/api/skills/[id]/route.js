@@ -6,9 +6,10 @@ import { NextResponse } from "next/server";
 //GET /api/skills/[id] --> Devuelve una habilidad por ID
 export async function GET(request, {params}) {
     try {
-        await connectDB();
+        await connectDB();      //Conectar bbdd
+        //Obetener id enviado
         const {id} = await params;
-        
+        //Buscar skill por ID
         const skillID = await Skill.findById(id);
         return NextResponse.json(skillID, { status: 200 });
 
@@ -20,11 +21,11 @@ export async function GET(request, {params}) {
 // PUT /api/skills/[id] --> Actualiza una habilidad por ID
 export async function PUT(request, {params}) {
     try {
-        await connectDB();
+        await connectDB();          //Conectar bbdd
         const {id} = await params;
-
+        //Obtener datos enviados
         const body = await request.json();
-        
+        //Actualizar skill por ID
         const skillUpdate = await Skill.findByIdAndUpdate(
             id,
             {
@@ -45,10 +46,10 @@ export async function PUT(request, {params}) {
 // DELETE /api/skills/[id] --> Elimina una habilidad por ID
 export async function DELETE(request, { params }) {
     try {
-        await connectDB();
-        const { id } = await params; 
-        const result = await Skill.findByIdAndDelete(id);
-
+        await connectDB();  //Conectar bbdd
+        const { id } = await params;    //obtener id enviado
+        const result = await Skill.findByIdAndDelete(id);   //Eliminar por id
+        //Si no existe error
         if (!result) {
             return NextResponse.json({ error: "No se encontró la habilidad" }, { status: 404 });
         }

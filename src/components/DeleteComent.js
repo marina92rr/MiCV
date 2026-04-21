@@ -1,14 +1,12 @@
 "use client";
 
-//Eliminar comentario, solo si eres admin o eres el usuario con ID
+// Eliminar comentario, solo si eres admin o eres el usuario con ID
 import { toast } from "sonner";
 
 export default function DeleteComent({ id, token, onDeleted }) {
-
-  //Función eliminar comentario
+  // Función eliminar comentario
   async function handleDelete() {
-
-    //Mensaje de eliminar 
+    // Mensaje de eliminar
     toast("¿Eliminar comentario?", {
       description: "Esta acción no se puede deshacer.",
       action: {
@@ -22,7 +20,9 @@ export default function DeleteComent({ id, token, onDeleted }) {
               },
             });
 
-            //Si se elimina aparece mensaje de confirmación
+            const data = await res.json();
+
+            // Si se elimina aparece mensaje de confirmación
             if (res.ok) {
               toast.success("Comentario eliminado correctamente");
               onDeleted?.();
@@ -35,7 +35,7 @@ export default function DeleteComent({ id, token, onDeleted }) {
           }
         },
       },
-      //Acción cancelar
+      // Acción cancelar
       cancel: {
         label: "Cancelar",
       },

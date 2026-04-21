@@ -1,22 +1,27 @@
 "use client";
+
+//Página de registro
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function Register() {
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(false);  //Carga
 
+  //Enviar datos para registrar usuario
   async function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
+    event.preventDefault();   //Valor
+    const formData = new FormData(event.target);    //Formulario
 
+    //Contraseña y validación de contraseña
     const password = formData.get("password");
     const passwordValidate = formData.get("passwordValidate");
 
+    //Si las contraseñas no son iguales aparece mensaje
     if (password !== passwordValidate) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
-
+    //Datos a enviar del formulario
     const UserData = {
       name: formData.get("name"),
       lastname: formData.get("lastname"),
@@ -27,8 +32,8 @@ export default function Register() {
 
     try {
       setloading(true);
-
-      const response = await fetch("/api/auth/register", {
+      //Enviar datos a API
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,33 +41,33 @@ export default function Register() {
         body: JSON.stringify(UserData),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok) {
-        toast.error(data.message || "Error al registrar usuario");
-        return;
+      // Si se elimina aparece mensaje de confirmación
+      if (res.ok) {
+        toast.success("Usuario registrado correctamente");
+        onDeleted?.();
+      } else {
+        toast.error(data.error || "Error al registrar usuario");
       }
-
-      toast.success("Usuario registrado correctamente");
-      event.target.reset();
-
     } catch (error) {
-      toast.error(error.message || "Error al guardar el usuario");
-    } finally {
-      setloading(false);
+      console.log(error);
+      toast.error("Error de conexión");
     }
   }
 
   return (
     <div className="lg:bg-amber-500 py-40 min-h-screen">
+      {/* Título */}
       <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">
         Registro
       </h1>
-
+      {/* Formulario de registro */}
       <form
         className="flex flex-col gap-4 m-auto w-full max-w-xs lg:max-w-md justify-center lg:bg-white lg:rounded-xl lg:p-10 lg:shadow-md"
         onSubmit={handleSubmit}
       >
+        {/* Nombre */}
         <label>Nombre:</label>
         <input
           className="bg-gray-200 rounded-md p-2"
@@ -70,7 +75,7 @@ export default function Register() {
           name="name"
           placeholder="Nombre..."
         />
-
+        {/* Apellidos */}
         <label>Apellidos:</label>
         <input
           className="bg-gray-200 rounded-md p-2"
@@ -78,7 +83,7 @@ export default function Register() {
           name="lastname"
           placeholder="Apellidos..."
         />
-
+        {/* Email */}
         <label>Email:</label>
         <input
           className="bg-gray-200 rounded-md p-2"
@@ -86,27 +91,27 @@ export default function Register() {
           name="email"
           placeholder="Correo electrónico"
         />
-
+        {/* Contraseña */}
         <label>Contraseña</label>
         <input
           className="bg-gray-200 rounded-md p-2"
           type="password"
           name="password"
         />
-
+        {/* Confirmar contraseña */}
         <label>Confirmar Contraseña</label>
         <input
           className="bg-gray-200 rounded-md p-2"
           type="password"
           name="passwordValidate"
         />
-
+        {/* enviar registro */}
         <button
           className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer"
           type="submit"
           disabled={loading}
         >
-          {loading ? "Guardando..." : "Guardar"}
+          {loading ? "Guardando..." : "Registrar"}
         </button>
       </form>
     </div>

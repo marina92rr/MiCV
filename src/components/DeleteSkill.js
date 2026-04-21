@@ -22,13 +22,13 @@ export default function DeleteSkill({ id, onDeleted }) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             });
-
-            //Si se ha eliminado se envia con toast un mensaje
+            const data = await res.json();
+            //Mensaje de eliminado
             if (res.ok) {
-              toast.success("Skill eliminada correctamente");
+              toast.error(data.error || "Error al eliminar skill");
               onDeleted?.();
             } else {
-              toast.error("Error al eliminar la skill");
+              toast.error("Error al eliminar skill");
             }
           } catch (error) {
             console.log(error);

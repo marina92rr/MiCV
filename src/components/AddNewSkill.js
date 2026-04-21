@@ -1,13 +1,15 @@
 "use client";
 
+//Botón para añadir Skill y Modal
 import NewSkillModal from "./NewSkillModal";
 import useAuth from "@/hooks/useAuth";
 import useOpenClose from "@/hooks/useOpenClose";
 
 export default function AddNewSkill({ onCreated }) {
-    const { isOpen, open, close } = useOpenClose();
-    const { user } = useAuth();
+    const { isOpen, open, close } = useOpenClose();     //Hooks abrir/ cerrar
+    const { user } = useAuth();         //Dato usuario
 
+    //Si no eres admin no aparece
     if (!user?.isAdmin) return null;
 
     return (

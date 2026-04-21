@@ -1,5 +1,6 @@
 import localFont from 'next/font/local'
 
+//Fuentes principales: ROBOTO/ ROBOTO SERIF
 export const roboto = localFont({
   src: [
     {

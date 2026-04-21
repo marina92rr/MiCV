@@ -1,14 +1,13 @@
 "use client";
 
-import useOpenClose from "@/hooks/useOpenClose";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export default function NewProjectModal() {
+export default function NewProjectModal({ open, onClose }) {
   const [skills, setSkills] = useState([]); //Guardar skills
   const [selected, setSelected] = useState([]); //Seleccionar skill
-  const [loading, setLoading] = useState(false);    
-  const {open, close} = useOpenClose();   //Hook abrir/ cerrar
-  
+  const [loading, setLoading] = useState(false);
+
   //Cargar API para lectura de las skills
   useEffect(() => {
     if (!open) return;  //Si no esta abierto el modal retorna
@@ -38,29 +37,31 @@ export default function NewProjectModal() {
         },
         body: form,
       });
-      //Si se envia se resetea los valores del form, selección de skill y modal se cierra
+      const data = await res.json();
+
+      // Si se elimina aparece mensaje de confirmación
       if (res.ok) {
-        e.target.reset();
-        setSelected([]);
-        close();
+        toast.success("Proyecto creado correctamente");
+        onDeleted?.();
+      } else {
+        toast.error(data.error || "Error al crear proyecto");
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
+      toast.error("Error de conexión");
     }
   }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center"
-      onClick={close}
+      onClick={onClose}
     >
       <div className="bg-white p-4 m-4 rounded-xl lg:w-125 shadow-lg" onClick={(e) => e.stopPropagation()}>
-        
+
         Formulario Añadir proyecto
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <h2 className="text-2xl text-center font-bold font-serif mb-4">Añadir nuevo Proyecto</h2>
-          
+
           {/* Título */}
           <label >Título:</label>
           <input
@@ -83,8 +84,8 @@ export default function NewProjectModal() {
             className="bg-amber-100 p-2 rounded-md outline-none focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
           <div className="flex justify-center flex-wrap text-center gap-4">
-           
-           {/* Logo de la empresa */}
+
+            {/* Logo de la empresa */}
             <div className="flex flex-col">
               <label>Logo:</label>
               <label className="cursor-pointer border mt-4 text-amber-700 border-amber-700 rounded-md p-2 hover:text-amber-500 hover:border-amber-500 transition">

@@ -3,15 +3,18 @@ import Skill from "@/models/Skill";
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
+// Fuerza que siempre sea dinámico
 export const dynamic = 'force-dynamic';
 
 // GET /api/skills --> Devuelve todas las habilidades
 export async function GET() {
     try {
-        await connectDB();
+        await connectDB();  //Conectar bbdd
 
+        //Buscar todas las skills
         const skills = await Skill.find({});
 
+        //Respuesta correcta
         return NextResponse.json(skills, { status: 200 });
     } catch (error) {
         console.error("Detalle del error:", error);
@@ -25,11 +28,13 @@ export async function GET() {
 // POST /api/skills --> Crea una nueva habilidad
 export async function POST(request) {
   try {
-    await connectDB();
+    await connectDB();    //Conectar bbdd
 
+    //El usuario debe estar autorizado
     const token = request.headers.get("authorization")?.replace("Bearer ", "");
     const decoded = verifyToken(token);
 
+    //Si no esta autorizado lanza error
     if (!decoded?.userId) {
       return NextResponse.json(
         { error: "No autenticado" },

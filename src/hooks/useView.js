@@ -2,21 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 
-//Para que aparezcan los elementos según aparezca por pantalla
+// Para animar cuando entra en pantalla
 export default function useView() {
-  const ref = useRef(null);     
+  const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Observa cuando el elemento entra en pantalla
+    if (!ref.current) return;
+
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setIsVisible(true);
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+      }
+    }, {
+      threshold: 0.1,
     });
-    // Empieza a observar el elemento
+
     observer.observe(ref.current);
-    // Limpia el observer 
+
     return () => observer.disconnect();
   }, []);
-  // Devuelve referencia y estado
+
   return [ref, isVisible];
 }

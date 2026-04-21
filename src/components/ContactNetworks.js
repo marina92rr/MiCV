@@ -2,6 +2,7 @@
 //Contacto redes Sociales
 export default function ContactNetworks() {
 
+    //Iconos de enlace que llevan a Linkedin, GitHub, correo y whatsapp
     return (
         <div className="flex flex-wrap my-10 gap-7 justify-center">
             <a href="https://www.linkedin.com/in/marina-ramos-ruiz-a48120314/" alt="Ir a LinkedIn" target="_blank" rel="noopener noreferrer">

@@ -21,12 +21,13 @@ export default function DeleteProject({ id, onDeleted }) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             });
+            const data = await res.json();
             //Mensaje de eliminado
             if (res.ok) {
-              toast.success("Proyecto eliminado correctamente");
+              toast.error(data.error || "Error al eliminar proyecto");
               onDeleted?.();
             } else {
-              toast.error("Error al eliminar el proyecto");
+              toast.error("Error al eliminar proyecto");
             }
           } catch (error) {
             console.log(error);

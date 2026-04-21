@@ -2,6 +2,7 @@
 
 import useOpenClose from "@/hooks/useOpenClose";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 // Actualizar proyecto
 export default function UpdateProject({ project, onUpdated }) {
@@ -66,17 +67,17 @@ export default function UpdateProject({ project, onUpdated }) {
       });
 
       const data = await res.json();
-      console.log(data);
 
-      // Si actualiza correctamente
+      // Si se elimina aparece mensaje de confirmación
       if (res.ok) {
-        close();        //Cerrar modal
-        onUpdated?.();  //recargar proyectos
+        toast.success("Proyecto actualizado correctamente");
+        onDeleted?.();
+      } else {
+        toast.error(data.error || "Error al actualizar proyecto");
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
+      toast.error("Error de conexión");
     }
   }
 
@@ -147,8 +148,8 @@ export default function UpdateProject({ project, onUpdated }) {
                         )
                       }
                       className={`px-4 py-2 rounded-xl border transition cursor-pointer ${active
-                          ? "bg-amber-600 text-white border-amber-600"
-                          : "bg-white text-black border-gray-300 hover:border-amber-400 hover:text-amber-400"
+                        ? "bg-amber-600 text-white border-amber-600"
+                        : "bg-white text-black border-gray-300 hover:border-amber-400 hover:text-amber-400"
                         }`}
                     >
                       {skill.name}
