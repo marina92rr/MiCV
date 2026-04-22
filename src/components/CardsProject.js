@@ -1,5 +1,7 @@
 import Link from "next/link";
 import FadeIn from "./FadeIn";
+import UpdateProject from "./UpdateProject";
+import DeleteProject from "./DeleteProject";
 
 export default function CardsProject({
   projects = [],
@@ -23,11 +25,10 @@ export default function CardsProject({
           >
             <div className="grid overflow-hidden bg-white shadow-md rounded-3xl hover:shadow-lg transition lg:grid-cols-2">
               <div
-                className={`p-7 flex flex-col justify-center ${
-                  reverse
+                className={`p-7 flex flex-col justify-center ${reverse
                     ? "lg:order-2 lg:items-end lg:text-right"
                     : "lg:order-1 lg:items-start lg:text-left"
-                }`}
+                  }`}
               >
                 <h3 className="font-serif text-center text-3xl font-bold">
                   {project.title}
@@ -54,9 +55,8 @@ export default function CardsProject({
 
                 <Link
                   href={`/myProjects/${project._id}`}
-                  className={`self-center bg-white shadow px-6 py-2 mt-6 border border-black rounded-full hover:bg-amber-500 hover:text-white hover:border-amber-500 transition ${
-                    reverse ? "lg:self-end" : "lg:self-start"
-                  }`}
+                  className={`self-center bg-white shadow px-6 py-2 mt-6 border border-black rounded-full hover:bg-amber-500 hover:text-white hover:border-amber-500 transition ${reverse ? "lg:self-end" : "lg:self-start"
+                    }`}
                 >
                   Ver proyecto
                 </Link>
@@ -70,14 +70,14 @@ export default function CardsProject({
               </div>
 
               <div
-                className={`bg-white flex items-center justify-center p-0 ${
-                  reverse ? "lg:order-1" : "lg:order-2"
-                }`}
+                className={`bg-white flex items-center justify-center p-0 ${reverse ? "lg:order-1" : "lg:order-2"
+                  }`}
               >
                 <img
                   src={`/projects/${project.logoProject}`}
                   alt={project.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               </div>
             </div>

@@ -6,6 +6,7 @@ import DeleteSkill from "@/components/DeleteSkill";
 import UpdateSkill from "@/components/UpdateSkill";
 import { useEffect, useState } from "react";
 import useAuth from "@/hooks/useAuth";
+import FadeIn from "@/components/FadeIn";
 
 
 export default function MySkills() {
@@ -43,16 +44,19 @@ export default function MySkills() {
 
     return (
         <div className="py-40 bg-gray-50 text-center">
-            <h1 className="font-serif text-4xl lg:text-6xl">Skills</h1>
+            <FadeIn className="fade-down">
+                <h1 className="font-serif text-4xl lg:text-6xl">Skills</h1>
+            </FadeIn>
             <div className="w-40 h-1 bg-yellow-400 mx-auto rounded-full mt-4"></div>
             {/* Botón Añadir Skill si eres admin*/}
-            {isAdmin && (
-                <div className="mt-7">
-                    <AddNewSkill onCreated={fetchSkills} />
-                </div>
-            )}
+                {isAdmin && (
+                    <div className="mt-7">
+                        <AddNewSkill onCreated={fetchSkills} />
+                    </div>
+                )}
+
             {/* Lectura de skills */}
-            <div className="w-full my-10 lg:w-[70%] mx-auto">
+            <FadeIn animation="fade-down" className="w-full my-10 lg:w-[70%] mx-auto">
                 {loading ? (
                     <span>Cargando...</span>
                 ) : (
@@ -63,16 +67,19 @@ export default function MySkills() {
                                 key={skill._id}
                             >
                                 {/* Icono de la skill */}
-                                <picture className="flex justify-center">
-                                    <img src={skill.icon} alt={skill.name} />
-                                </picture>
+                                <FadeIn animation="fade-right">
+                                    <picture className="flex justify-center">
+                                        <img src={skill.icon} alt={skill.name} />
+                                    </picture>
+                                </FadeIn>
+
                                 {/* Nombre de la skill */}
-                                <div className="text-center">
+                                <FadeIn animation="fade-left" className="text-center">
                                     <h2 className="text-2xl font-serif font-bold">
                                         {skill.name}
                                     </h2>
                                     <p className="text-amber-700">Nivel: {skill.level}</p>
-                                </div>
+                                </FadeIn>
                                 {/* Si eres admin aparecerán estos botones */}
                                 {isAdmin && (
                                     <div className="flex gap-2 justify-end">
@@ -84,7 +91,7 @@ export default function MySkills() {
                         ))}
                     </div>
                 )}
-            </div>
+            </FadeIn>
         </div>
     );
 }

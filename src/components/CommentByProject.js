@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import DeleteComent from "./DeleteComent";
+import FadeIn from "./FadeIn";
 
 export default function CommentByProject({ projectId }) {
   const [comments, setComments] = useState([]);   //Guardar comentarios
@@ -89,9 +90,12 @@ export default function CommentByProject({ projectId }) {
             </button>
           </form>
         ) : (
-          <p className="text-gray-500 mb-6">
-            Debes iniciar sesión para comentar
-          </p>
+          <FadeIn animation="fade-up">
+            <p className="text-gray-500 mb-6">
+              Debes iniciar sesión para comentar
+            </p>
+          </FadeIn>
+
         )}
       </div>
       {/* Recorre todos los comentarios del proyecto */}

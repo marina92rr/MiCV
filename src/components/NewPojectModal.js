@@ -53,7 +53,7 @@ export default function NewProjectModal({ open, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center"
+    <div className="fixed inset-0 z-1 bg-black/50 flex items-center justify-center"
       onClick={onClose}
     >
       <div className="bg-white p-4 m-4 rounded-xl lg:w-125 shadow-lg" onClick={(e) => e.stopPropagation()}>

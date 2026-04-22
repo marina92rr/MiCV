@@ -47,7 +47,7 @@ export default function NewSkillModal({ onCreated, open, onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center" onClick={onClose}>
+    <div className="fixed inset-0 z-2 bg-black/50 flex items-center justify-center" onClick={onClose}>
       <div className="bg-white p-6 rounded-xl w-xs  lg:w-100 shadow-lg" onClick={(e) => e.stopPropagation()}>
 
         {/* Formulario Crear Skill */}

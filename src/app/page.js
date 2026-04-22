@@ -40,13 +40,14 @@ export default function Home() {
           <div>
             <picture>
               {/* Imagen webp */}
-              <source srcSet="/profile-page.webp" type="image/webp" />
+              <source srcSet="/profile-page.webp" type="image/webp" loading="lazy"/>
 
               {/* Imagen normal */}
               <img
                 src="/profile-page.png"
                 alt="Retrato de Marina Ramos Ruiz"
                 className="w-full rounded-full lg:rounded-none"
+                loading="lazy"
               />
             </picture>
           </div>

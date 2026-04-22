@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import FadeIn from "@/components/FadeIn";
 
 export default function Login() {
   const [loading, setLoading] = useState(false); // Estado carga
@@ -66,42 +67,55 @@ export default function Login() {
   return (
     <div className="lg:bg-amber-500 py-40 min-h-screen">
       {/* Título */}
-      <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">
-        Iniciar sesión
-      </h1>
+      <FadeIn animation="fade-down">
+        <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">
+          Iniciar sesión
+        </h1>
+      </FadeIn>
+
 
       {/* Formulario */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 m-auto w-full max-w-xs lg:max-w-md justify-center lg:bg-white lg:rounded-xl lg:p-10 lg:shadow-md"
-      >
-        {/* Email */}
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          className="bg-gray-200 rounded-md p-2"
-        />
-
-        {/* Contraseña */}
-        <label>Contraseña:</label>
-        <input
-          type="password"
-          name="password"
-          placeholder="********"
-          className="bg-gray-200 rounded-md p-2"
-        />
-
-        {/* Botón */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer"
+      <FadeIn animation="fade-up">
+        <form
+          onSubmit={handleSubmit}
+          className=" m-auto w-full max-w-xs lg:max-w-md justify-center lg:bg-white lg:rounded-xl lg:p-10 lg:shadow-md"
         >
-          {loading ? "Entrando..." : "Iniciar sesión"}
-        </button>
-      </form>
+          {/* Email */}
+
+          <FadeIn animation="fade-left" className="flex flex-col gap-4">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Correo electrónico"
+              className="bg-gray-200 rounded-md p-2"
+            />
+
+            {/* Contraseña */}
+
+            <label>Contraseña:</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="********"
+              className="bg-gray-200 rounded-md p-2"
+            />
+          </FadeIn>
+
+          {/* Botón */}
+          <FadeIn animation="fade-up" className="mt-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer"
+            >
+              {loading ? "Entrando..." : "Iniciar sesión"}
+            </button>
+          </FadeIn>
+
+        </form>
+      </FadeIn>
+
     </div>
   );
 }
