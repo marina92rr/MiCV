@@ -1,4 +1,5 @@
 //Página para ver proyecto según ID
+import { headers } from "next/headers";
 import CommentByProject from "@/components/CommentByProject";
 import FadeIn from "@/components/FadeIn";
 
@@ -6,10 +7,20 @@ export default async function ProjectPage({ params }) {
   //Obtener ID desde la URL
   const { id } = await params;
 
+  //Obtener host y protocolo dinámicamente
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
   //Llamada a la API para traer el proyecto por ID
-  const res = await fetch(`http://localhost:3000/api/projects/${id}`, {
-    cache: "no-store", //No guardar en caché, siempre actualizado
+  const res = await fetch(`${protocol}://${host}/api/projects/${id}`, {
+    cache: "no-store",
   });
+
+  //Si falla la petición
+  if (!res.ok) {
+    throw new Error("No se pudo cargar el proyecto");
+  }
 
   //Convertir respuesta a json
   const project = await res.json();
@@ -17,7 +28,6 @@ export default async function ProjectPage({ params }) {
   return (
     <div className="bg-gray-100 py-40">
       <div className="w-[90%] lg:w-[70%] mx-auto flex flex-col items-center">
-
         {/* Título proyecto */}
         <FadeIn animation="fade-down">
           <h1 className="font-serif text-4xl lg:text-6xl">
@@ -51,6 +61,7 @@ export default async function ProjectPage({ params }) {
             />
           </picture>
         </FadeIn>
+
         {/* Descripción proyecto */}
         <FadeIn animation="fade-up">
           <p className="mb-4">{project.description}</p>
@@ -79,7 +90,6 @@ export default async function ProjectPage({ params }) {
             Ir a GitHub
           </a>
         </FadeIn>
-
 
         {/* Componente comentarios según ID del proyecto */}
         <CommentByProject projectId={id} />
