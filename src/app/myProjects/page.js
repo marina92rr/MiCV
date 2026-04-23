@@ -27,7 +27,7 @@ export default function MyProjects() {
      
 
       {/* Llamada al componente card */}
-      <section className="my-10 flex justify-center">
+      <section className="w-11/12 lg:w-3/4 mx-auto">
         <CardsProject
           projects={projects}
           loading={loading}
