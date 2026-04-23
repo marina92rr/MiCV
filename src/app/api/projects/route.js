@@ -27,7 +27,9 @@ export async function GET() {
     // Buscar proyectos y relacionar skills + usuario
     const projects = await Project.find()
       .populate("skills", "name")
-      .populate("userId", "name lastname");
+      .populate("userId", "name lastname")
+      .sort({ createdAt: -1 });
+      
 
     // Formatear datos para frontend
     const formattedProjects = projects.map((project) => {

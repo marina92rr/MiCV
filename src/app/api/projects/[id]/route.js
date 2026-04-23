@@ -2,6 +2,8 @@
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 import User from "@/models/User";
 import Skill from "@/models/Skill";
@@ -68,23 +70,50 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE /api/projects/[id] --> Elimina un proyecto por ID
-export async function DELETE(request, { params }) {
-    try {
-        await connectDB();
-        const { id } = await params;
-        const result = await Project.findByIdAndDelete(id);
+export async function DELETE(req, { params }) {
+  try {
+    await connectDB();
 
-        if (!result) {
-            return NextResponse.json({ error: "No se encontró el proyecto" }, { status: 404 });
-        }
+    const { id } = await params;
 
-        return NextResponse.json({ message: "Proyecto eliminado" });
+    // Buscar el proyecto por ID
+    const project = await Project.findById(id);
 
-    } catch (error) {
-
-        return NextResponse.json(
-            { error: "Error al eliminar", details: error.message },
-            { status: 500 }
-        );
+    //Si no existe el proyecto error
+    if (!project) {
+      return NextResponse.json(
+        { error: "Proyecto no encontrado" },
+        { status: 404 }
+      );
     }
+
+    // Lista de imágenes asociadas al proyecto
+    const filesToDelete = [project.logoProject, project.imageProject];
+
+    // Recorrer y eliminar cada archivo si existe
+    for (const fileName of filesToDelete) {
+      if (!fileName) continue;
+
+      const filePath = path.join(process.cwd(), "public", "projects", fileName);
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    // Eliminar el proyecto de la base de datos
+    await Project.findByIdAndDelete(id);
+
+    return NextResponse.json(
+      { message: "Proyecto e imágenes eliminados correctamente" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("DELETE PROJECT ERROR:", error);
+
+    return NextResponse.json(
+      { error: "Error al eliminar el proyecto" },
+      { status: 500 }
+    );
+  }
 }

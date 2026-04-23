@@ -2,6 +2,7 @@
 
 import CardsProject from "@/components/CardsProject";
 import FadeIn from "@/components/FadeIn";
+import ListSkill from "@/components/ListSkill";
 import useCardsProjects from "@/hooks/useCardsProject";
 
 export default function Home() {
@@ -9,7 +10,7 @@ export default function Home() {
   const { projects, loading } = useCardsProjects("/api/projects/recent");
 
   return (
-    <div className="bg-gray-100 pb-6">
+    <div className="bg-gray-100 pb-6 ">
       {/* Presentación */}
       <section className="mt-15 flex flex-col items-center justify-center text-center gap-10 lg:mt-0 lg:flex-row lg:justify-between lg:text-left">
         
@@ -52,6 +53,25 @@ export default function Home() {
             </picture>
           </div>
         </FadeIn>
+      </section>
+
+      {/* Sección Skills */}
+      <section className="my-20">
+        <div className="w-11/12 lg:w-3/4 mx-auto">
+          
+          {/* Título */}
+          <FadeIn animation="fade-down">
+            <h2 className="font-serif font-bold text-center text-3xl my-4">
+              Skills
+            </h2>
+
+            {/* Línea decoración */}
+            <div className="w-60 h-0.5 bg-yellow-400 mx-auto rounded-full"></div>
+          </FadeIn>
+
+          {/* Tarjetas skills */}
+            <ListSkill/>
+        </div>
       </section>
 
       {/* Sección proyectos */}

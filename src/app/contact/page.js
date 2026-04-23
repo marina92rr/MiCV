@@ -7,7 +7,7 @@ import FadeIn from "@/components/FadeIn";
 export default function Contact() {
 
     return (
-        <div className="flex flex-col py-40 bg-gray-100 items-center min-h-screen">
+        <div className="flex flex-col py-40 bg-gray-100 items-center min-h-[calc(100vh-120px)]">
             {/* Título principal */}
             <FadeIn animation="fade-down">
                 <h1 className="font-serif text-4xl lg:text-6xl">contáctanos</h1>

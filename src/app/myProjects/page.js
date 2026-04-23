@@ -12,7 +12,7 @@ export default function MyProjects() {
   const { projects, loading, fetchProjects } = useCardsProjects("/api/projects"); //Usar carga de proyecto mediante API
 
   return (
-    <div className="w-full flex flex-col py-40 bg-gray-100 items-center min-h-screen">
+    <div className="w-full flex flex-col py-40 bg-gray-100 items-center min-h-[calc(100vh-120px)]">
       <FadeIn animation="fade-down">
         <h1 className="font-serif text-4xl lg:text-6xl">Proyectos</h1>
       </FadeIn>
@@ -21,13 +21,13 @@ export default function MyProjects() {
     
         {isAdmin && (
           <div className="mt-7">
-            <AddNewProject />
+            <AddNewProject onCreated={fetchProjects}/>
           </div>
         )}
      
 
       {/* Llamada al componente card */}
-      <section className="my-10 flex justify-center">
+      <section className="w-11/12 lg:w-3/4 mx-auto">
         <CardsProject
           projects={projects}
           loading={loading}

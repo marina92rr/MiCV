@@ -24,7 +24,7 @@ export default function DeleteProject({ id, onDeleted }) {
             const data = await res.json();
             //Mensaje de eliminado
             if (res.ok) {
-              toast.error(data.error || "Error al eliminar proyecto");
+              toast.success("El proyecto ha sido eliminado correctamente");
               onDeleted?.();
             } else {
               toast.error("Error al eliminar proyecto");
