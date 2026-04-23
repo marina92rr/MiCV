@@ -92,7 +92,7 @@ export default function UpdateProject({ project, onUpdated }) {
 
   // Contenido del modal
   const modal = isOpen ? (
-    <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-1 bg-black/50 flex items-center justify-center px-4">
       <div
         ref={contentRef}
         className="bg-white p-6 rounded-xl w-full max-w-lg shadow-lg"

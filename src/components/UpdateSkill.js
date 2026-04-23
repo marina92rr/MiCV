@@ -64,7 +64,7 @@ export default function UpdateSkill({ skill, onUpdated }) {
 
   // Contenido del modal
   const modal = isOpen ? (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4">
+    <div className="fixed inset-0 z-1 flex items-center justify-center bg-black/50 px-4">
       <div
         ref={contentRef}
         className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg"

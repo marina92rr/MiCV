@@ -6,7 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import useOpenClose from "@/hooks/useOpenClose";
 
 //Añadir nuevo proyecto
-export default function AddNewProject() {
+export default function AddNewProject({onCreated}) {
     const { isOpen, open, close } = useOpenClose(); //hook abrir/cerrar modal
     const { user } = useAuth();   //Usuario
 
@@ -25,6 +25,7 @@ export default function AddNewProject() {
             <NewProjectModal
                 open={isOpen}
                 onClose={close}
+                onCreated={onCreated}
             />
         </>
 

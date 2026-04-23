@@ -21,7 +21,7 @@ export default function MyProjects() {
     
         {isAdmin && (
           <div className="mt-7">
-            <AddNewProject />
+            <AddNewProject onCreated={fetchProjects}/>
           </div>
         )}
      

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function NewProjectModal({ open, onClose }) {
+export default function NewProjectModal({ open, onClose, onCreated }) {
   const [skills, setSkills] = useState([]); // Lista de skills disponibles
   const [selected, setSelected] = useState([]); // Skills seleccionadas
   const [loading, setLoading] = useState(false); // Estado de carga
@@ -54,6 +54,7 @@ export default function NewProjectModal({ open, onClose }) {
         formElement.reset(); // Limpia los campos del formulario
         setSelected([]); // Limpia las skills seleccionadas
         toast.success(data.message || "Proyecto creado correctamente");
+        onCreated();
         onClose?.(); // Cierra el modal si existe la función
       } else {
         toast.error(data.error || "Error al crear proyecto");
