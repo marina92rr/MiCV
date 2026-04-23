@@ -39,7 +39,7 @@ export default async function ProjectPage({ params }) {
         <div className="w-40 h-1 bg-yellow-400 mx-auto rounded-full my-5"></div>
 
         {/* Mostrar todas las skills del proyecto */}
-        <FadeIn animation="fade-up" className="flex gap-2 flex-wrap my-5">
+        <FadeIn animation="fade-up" className="flex gap-2 flex-wrap my-10">
           {project.skills?.map((s) => (
             <span
               key={s._id}
@@ -64,7 +64,7 @@ export default async function ProjectPage({ params }) {
 
         {/* Descripción proyecto */}
         <FadeIn animation="fade-up">
-          <p className="mb-4">{project.description}</p>
+          <p className="my-15">{project.description}</p>
         </FadeIn>
 
         {/* Imagen del proyecto */}
