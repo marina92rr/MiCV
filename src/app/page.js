@@ -9,7 +9,7 @@ export default function Home() {
   const { projects, loading } = useCardsProjects("/api/projects/recent");
 
   return (
-    <div className="bg-gray-100 pb-6">
+    <div className="bg-gray-100 pb-6 ">
       {/* Presentación */}
       <section className="mt-15 flex flex-col items-center justify-center text-center gap-10 lg:mt-0 lg:flex-row lg:justify-between lg:text-left">
         

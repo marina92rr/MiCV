@@ -1,29 +1,32 @@
 "use client";
 
 import FadeIn from "@/components/FadeIn";
-//Página de registro
 import { useState } from "react";
 import { toast } from "sonner";
 
+// Página de registro
 export default function Register() {
-  const [loading, setloading] = useState(false);  //Carga
+  const [loading, setLoading] = useState(false); // Estado de carga del botón
 
-  //Enviar datos para registrar usuario
+  // Envía los datos del formulario para registrar al usuario
   async function handleSubmit(event) {
-    event.preventDefault();   //Valor
-    const formData = new FormData(event.target);    //Formulario
+    event.preventDefault(); // Evita que el formulario recargue la página
 
-    //Contraseña y validación de contraseña
+    const form = event.currentTarget; // Referencia segura al formulario
+    const formData = new FormData(form); // Obtiene los datos del formulario
+
+    // Obtener contraseña y confirmación
     const password = formData.get("password");
     const passwordValidate = formData.get("passwordValidate");
 
-    //Si las contraseñas no son iguales aparece mensaje
+    // Validar que ambas contraseñas coincidan
     if (password !== passwordValidate) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
-    //Datos a enviar del formulario
-    const UserData = {
+
+    // Construir el objeto con los datos del usuario
+    const userData = {
       name: formData.get("name"),
       lastname: formData.get("lastname"),
       email: formData.get("email"),
@@ -32,34 +35,43 @@ export default function Register() {
     };
 
     try {
-      setloading(true);
-      //Enviar datos a API
+      setLoading(true);
+
+      // Enviar los datos al endpoint de registro
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(UserData),
+        body: JSON.stringify(userData),
       });
 
-      const data = await res.json();
+      // Intentar leer la respuesta como JSON solo si existe
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
-      // Si se elimina aparece mensaje de confirmación
+      // Mostrar el resultado del registro
       if (res.ok) {
-        toast.success("Usuario registrado correctamente");
-        onDeleted?.();
+        form.reset(); // Limpia el formulario
+        toast.success(data.message || "Usuario registrado correctamente");
       } else {
         toast.error(data.error || "Error al registrar usuario");
       }
     } catch (error) {
-      console.log(error);
+      console.error("ERROR EN REGISTRO:", error);
       toast.error("Error de conexión");
+    } finally {
+      setLoading(false); // Restablece siempre el botón
     }
   }
 
   return (
-    <div className="lg:bg-amber-500 py-40 min-h-screen">
-      {/* Título */}
+    <div className="lg:bg-amber-500 py-40 min-h-[calc(100vh-120px)]">
+      {/* Título de la página */}
       <FadeIn animation="fade-down">
         <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">
           Registro
@@ -73,7 +85,7 @@ export default function Register() {
           onSubmit={handleSubmit}
         >
           <FadeIn animation="fade-left" className="flex flex-col gap-4">
-            {/* Nombre */}
+            {/* Campo nombre */}
             <label>Nombre:</label>
             <input
               className="bg-gray-200 rounded-md p-2"
@@ -81,7 +93,8 @@ export default function Register() {
               name="name"
               placeholder="Nombre..."
             />
-            {/* Apellidos */}
+
+            {/* Campo apellidos */}
             <label>Apellidos:</label>
             <input
               className="bg-gray-200 rounded-md p-2"
@@ -89,7 +102,8 @@ export default function Register() {
               name="lastname"
               placeholder="Apellidos..."
             />
-            {/* Email */}
+
+            {/* Campo correo electrónico */}
             <label>Email:</label>
             <input
               className="bg-gray-200 rounded-md p-2"
@@ -97,32 +111,34 @@ export default function Register() {
               name="email"
               placeholder="Correo electrónico"
             />
-            {/* Contraseña */}
+
+            {/* Campo contraseña */}
             <label>Contraseña</label>
             <input
               className="bg-gray-200 rounded-md p-2"
               type="password"
               name="password"
             />
-            {/* Confirmar contraseña */}
-            <label>Confirmar Contraseña</label>
+
+            {/* Campo confirmación de contraseña */}
+            <label>Confirmar contraseña</label>
             <input
               className="bg-gray-200 rounded-md p-2"
               type="password"
               name="passwordValidate"
             />
           </FadeIn>
-          {/* enviar registro */}
+
+          {/* Botón para enviar el formulario */}
           <FadeIn animation="fade-up" className="mt-8">
             <button
-              className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer"
+              className="bg-amber-500 hover:bg-amber-600 p-2 rounded-xl text-white font-bold cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               type="submit"
               disabled={loading}
             >
               {loading ? "Guardando..." : "Registrar"}
             </button>
           </FadeIn>
-
         </form>
       </FadeIn>
     </div>

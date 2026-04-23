@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
       className={`${roboto.variable} ${serif.variable} h-full antialiased`}
     >
       {/* Cuerpo de la web principal */}
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-[calc(100vh-120px)] flex flex-col">
         {/* Cabecera menú */}
         <header>
           <Navbar />

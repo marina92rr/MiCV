@@ -91,7 +91,7 @@ export default function CommentByProject({ projectId }) {
           </form>
         ) : (
           <FadeIn animation="fade-up">
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500 text-lg mb-6">
               Debes iniciar sesión para comentar
             </p>
           </FadeIn>

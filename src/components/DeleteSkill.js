@@ -23,9 +23,10 @@ export default function DeleteSkill({ id, onDeleted }) {
               },
             });
             const data = await res.json();
+            
             //Mensaje de eliminado
             if (res.ok) {
-              toast.error(data.error || "Error al eliminar skill");
+              toast.success("La skill se ha eliminado correctamente.");
               onDeleted?.();
             } else {
               toast.error("Error al eliminar skill");

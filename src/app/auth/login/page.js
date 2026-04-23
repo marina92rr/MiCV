@@ -65,7 +65,7 @@ export default function Login() {
   }
 
   return (
-    <div className="lg:bg-amber-500 py-40 min-h-screen">
+    <div className="lg:bg-amber-500 py-40 min-h-[calc(100vh-120px)]">
       {/* Título */}
       <FadeIn animation="fade-down">
         <h1 className="font-serif text-4xl text-center lg:pb-10 lg:text-6xl lg:text-white">

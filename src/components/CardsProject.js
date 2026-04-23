@@ -10,8 +10,8 @@ export default function CardsProject({
   showSkills = true,
   onReload,
 }) {
-  if (loading) return <p className="text-center mt-15">Cargando proyectos...</p>;
-  if (!projects.length) return <p className="text-center">No hay proyectos disponibles.</p>;
+  if (loading) return <p className="text-center text-gray-500 text-lg mt-15">Cargando proyectos...</p>;
+  if (!projects.length) return <p className="text-center text-gray-500 text-lg my-15">No hay proyectos disponibles.</p>;
 
   return (
     <div className="my-20 flex flex-col mx-auto lg:max-w-300 gap-10">
