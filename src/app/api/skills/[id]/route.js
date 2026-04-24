@@ -29,7 +29,7 @@ export async function PUT(request, {params}) {
         const skillUpdate = await Skill.findByIdAndUpdate(
             id,
             {
-                title: body.title,
+                name: body.name,
                 level: body.level,
                 icon: body.icon,
                 userId: body.userId,

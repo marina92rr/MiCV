@@ -43,14 +43,13 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-
+    //Crear nueva skill
     const newSkill = await Skill.create({
       name: body.name,
       level: body.level,
       icon: body.icon,
       userId: decoded.userId,
     });
-
     return NextResponse.json(newSkill, { status: 201 });
   } catch (error) {
     return NextResponse.json(
