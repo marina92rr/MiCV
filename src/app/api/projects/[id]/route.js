@@ -1,15 +1,7 @@
-
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
-import { verifyToken } from "@/lib/auth";
-
-import fs from "fs";
-import path from "path";
-
-import User from "@/models/User";
-import Skill from "@/models/Skill";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,14 +10,18 @@ cloudinary.config({
 });
 
 function getPublicId(url) {
-  const parts = url.split("/");
-  const file = parts[parts.length - 1];
-  const folder = parts[parts.length - 2];
+  const parts = url.split("/upload/");
+  const pathWithVersion = parts[1];
 
-  return `${folder}/${file.split(".")[0]}`;
+  if (!pathWithVersion) return null;
+
+  const pathWithoutVersion = pathWithVersion.replace(/^v\d+\//, "");
+  const publicId = pathWithoutVersion.replace(/\.[^/.]+$/, "");
+
+  return publicId;
 }
 
-// GET /api/projects/[id] --> Devuelve un proyecto por ID
+// GET /api/projects/[id]
 export async function GET(request, { params }) {
   try {
     await connectDB();
@@ -55,33 +51,45 @@ export async function GET(request, { params }) {
   }
 }
 
-// PUT /api/projects/[id] --> Actualiza un proyecto por ID
+// PUT /api/projects/[id]
 export async function PUT(request, { params }) {
-    try {
-        await connectDB();
-        const { id } = await params;
+  try {
+    await connectDB();
 
-        const body = await request.json();
+    const { id } = await params;
+    const body = await request.json();
 
-        const projectUpdate = await Project.findByIdAndUpdate(
-            id,
-            {
-                title: body.title,
-                description: body.description,
-                urlProject: body.urlProject,
-                skills: body.skills, // 👈 importante
-            },
-            { new: true }
-        );
-        return NextResponse.json(projectUpdate);
+    const projectUpdate = await Project.findByIdAndUpdate(
+      id,
+      {
+        title: body.title,
+        description: body.description,
+        urlProject: body.urlProject,
+        skills: body.skills,
+      },
+      { new: true }
+    );
 
-    } catch (error) {
-        return NextResponse.json({ error: 'Error al actualizar el proyecto' })
+    if (!projectUpdate) {
+      return NextResponse.json(
+        { error: "Proyecto no encontrado" },
+        { status: 404 }
+      );
     }
 
+    return NextResponse.json(projectUpdate, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Error al actualizar el proyecto",
+        details: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }
 
-// DELETE /api/projects/[id] --> Elimina un proyecto por ID
+// DELETE /api/projects/[id]
 export async function DELETE(request, { params }) {
   try {
     await connectDB();
@@ -99,12 +107,18 @@ export async function DELETE(request, { params }) {
 
     if (project.imageProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.imageProject);
-      await cloudinary.uploader.destroy(publicId);
+
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
     }
 
     if (project.logoProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.logoProject);
-      await cloudinary.uploader.destroy(publicId);
+
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
     }
 
     await Project.findByIdAndDelete(id);
