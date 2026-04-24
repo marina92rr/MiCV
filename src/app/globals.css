@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
+/* Añadir tipografías */
 :root {
   --font-sans: var(--font-roboto);
   --font-serif: var(--font-serif);
 }
 
+/* Eliminar espacio al realizar animación FadeIn */
 html,
 body {
   overflow-x: clip;
