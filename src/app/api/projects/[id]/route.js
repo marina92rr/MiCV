@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { verifyToken } from "@/lib/auth";
 
 import fs from "fs";
 import path from "path";
