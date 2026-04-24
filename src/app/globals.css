@@ -5,3 +5,7 @@
   --font-serif: var(--font-serif);
 }
 
+html,
+body {
+  overflow-x: clip;
+}
