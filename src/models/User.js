@@ -1,5 +1,5 @@
 
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 //Modelo de Usuario
 //Usuario: Nombre, apellidos, email, contraseña, Administrador
