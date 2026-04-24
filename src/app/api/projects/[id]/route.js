@@ -1,14 +1,25 @@
-
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
-import User from "@/models/User";
-import Skill from "@/models/Skill";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// GET /api/projects/[id] --> Devuelve un proyecto por ID
+function getPublicId(url) {
+  const parts = url.split("/upload/");
+  const pathWithVersion = parts[1];
+
+  if (!pathWithVersion) return null;
+
+  const pathWithoutVersion = pathWithVersion.replace(/^v\d+\//, "");
+  const publicId = pathWithoutVersion.replace(/\.[^/.]+$/, "");
+
+  return publicId;
+}
 
 // GET /api/projects/[id]
 export async function GET(request, { params }) {
@@ -16,7 +27,6 @@ export async function GET(request, { params }) {
     await connectDB();
 
     const { id } = await params;
-    console.log("ID recibido:", id);
 
     const project = await Project.findById(id)
       .populate("skills", "name")
@@ -31,8 +41,6 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(project, { status: 200 });
   } catch (error) {
-    console.error("ERROR GET PROJECT BY ID:", error);
-
     return NextResponse.json(
       {
         error: "No se ha obtenido el proyecto",
@@ -43,43 +51,53 @@ export async function GET(request, { params }) {
   }
 }
 
-// PUT /api/projects/[id] --> Actualiza un proyecto por ID
+// PUT /api/projects/[id]
 export async function PUT(request, { params }) {
-    try {
-        await connectDB();
-        const { id } = await params;
+  try {
+    await connectDB();
 
-        const body = await request.json();
+    const { id } = await params;
+    const body = await request.json();
 
-        const projectUpdate = await Project.findByIdAndUpdate(
-            id,
-            {
-                title: body.title,
-                description: body.description,
-                urlProject: body.urlProject,
-                skills: body.skills, // 👈 importante
-            },
-            { new: true }
-        );
-        return NextResponse.json(projectUpdate);
+    const projectUpdate = await Project.findByIdAndUpdate(
+      id,
+      {
+        title: body.title,
+        description: body.description,
+        urlProject: body.urlProject,
+        skills: body.skills,
+      },
+      { new: true }
+    );
 
-    } catch (error) {
-        return NextResponse.json({ error: 'Error al actualizar el proyecto' })
+    if (!projectUpdate) {
+      return NextResponse.json(
+        { error: "Proyecto no encontrado" },
+        { status: 404 }
+      );
     }
 
+    return NextResponse.json(projectUpdate, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Error al actualizar el proyecto",
+        details: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }
 
-// DELETE /api/projects/[id] --> Elimina un proyecto por ID
-export async function DELETE(req, { params }) {
+// DELETE /api/projects/[id]
+export async function DELETE(request, { params }) {
   try {
     await connectDB();
 
     const { id } = await params;
 
-    // Buscar el proyecto por ID
     const project = await Project.findById(id);
 
-    //Si no existe el proyecto error
     if (!project) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
@@ -87,32 +105,36 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Lista de imágenes asociadas al proyecto
-    const filesToDelete = [project.logoProject, project.imageProject];
+    if (project.imageProject?.includes("res.cloudinary.com")) {
+      const publicId = getPublicId(project.imageProject);
 
-    // Recorrer y eliminar cada archivo si existe
-    for (const fileName of filesToDelete) {
-      if (!fileName) continue;
-
-      const filePath = path.join(process.cwd(), "public", "projects", fileName);
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
       }
     }
 
-    // Eliminar el proyecto de la base de datos
+    if (project.logoProject?.includes("res.cloudinary.com")) {
+      const publicId = getPublicId(project.logoProject);
+
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId);
+      }
+    }
+
     await Project.findByIdAndDelete(id);
 
     return NextResponse.json(
-      { message: "Proyecto e imágenes eliminados correctamente" },
+      { message: "Proyecto eliminado" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("DELETE PROJECT ERROR:", error);
+    console.error("ERROR DELETE PROJECT:", error);
 
     return NextResponse.json(
-      { error: "Error al eliminar el proyecto" },
+      {
+        error: "Error al eliminar",
+        details: error.message,
+      },
       { status: 500 }
     );
   }
