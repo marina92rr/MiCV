@@ -86,20 +86,7 @@ export async function DELETE(request, { params }) {
   try {
     await connectDB();
 
-    const token = request.headers
-      .get("authorization")
-      ?.replace("Bearer ", "");
-
-    const decoded = verifyToken(token);
-
-    if (!decoded?.userId) {
-      return NextResponse.json(
-        { error: "No autenticado" },
-        { status: 401 }
-      );
-    }
-
-    const { id } = params;
+    const { id } = await params;
 
     const project = await Project.findById(id);
 
@@ -110,14 +97,12 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    // Borrar imagen principal
-    if (project.imageProject) {
+    if (project.imageProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.imageProject);
       await cloudinary.uploader.destroy(publicId);
     }
 
-    // Borrar logo
-    if (project.logoProject) {
+    if (project.logoProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.logoProject);
       await cloudinary.uploader.destroy(publicId);
     }
@@ -129,6 +114,8 @@ export async function DELETE(request, { params }) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("ERROR DELETE PROJECT:", error);
+
     return NextResponse.json(
       {
         error: "Error al eliminar",
