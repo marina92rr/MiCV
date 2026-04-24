@@ -2,21 +2,34 @@
 import { connectDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 import { NextResponse } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
+
 import fs from "fs";
 import path from "path";
 
 import User from "@/models/User";
 import Skill from "@/models/Skill";
 
-// GET /api/projects/[id] --> Devuelve un proyecto por ID
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// GET /api/projects/[id]
+function getPublicId(url) {
+  const parts = url.split("/");
+  const file = parts[parts.length - 1];
+  const folder = parts[parts.length - 2];
+
+  return `${folder}/${file.split(".")[0]}`;
+}
+
+// GET /api/projects/[id] --> Devuelve un proyecto por ID
 export async function GET(request, { params }) {
   try {
     await connectDB();
 
     const { id } = await params;
-    console.log("ID recibido:", id);
 
     const project = await Project.findById(id)
       .populate("skills", "name")
@@ -31,8 +44,6 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(project, { status: 200 });
   } catch (error) {
-    console.error("ERROR GET PROJECT BY ID:", error);
-
     return NextResponse.json(
       {
         error: "No se ha obtenido el proyecto",
@@ -70,16 +81,27 @@ export async function PUT(request, { params }) {
 }
 
 // DELETE /api/projects/[id] --> Elimina un proyecto por ID
-export async function DELETE(req, { params }) {
+export async function DELETE(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params;
+    const token = request.headers
+      .get("authorization")
+      ?.replace("Bearer ", "");
 
-    // Buscar el proyecto por ID
+    const decoded = verifyToken(token);
+
+    if (!decoded?.userId) {
+      return NextResponse.json(
+        { error: "No autenticado" },
+        { status: 401 }
+      );
+    }
+
+    const { id } = params;
+
     const project = await Project.findById(id);
 
-    //Si no existe el proyecto error
     if (!project) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
@@ -87,32 +109,30 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Lista de imágenes asociadas al proyecto
-    const filesToDelete = [project.logoProject, project.imageProject];
-
-    // Recorrer y eliminar cada archivo si existe
-    for (const fileName of filesToDelete) {
-      if (!fileName) continue;
-
-      const filePath = path.join(process.cwd(), "public", "projects", fileName);
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+    // Borrar imagen principal
+    if (project.imageProject) {
+      const publicId = getPublicId(project.imageProject);
+      await cloudinary.uploader.destroy(publicId);
     }
 
-    // Eliminar el proyecto de la base de datos
+    // Borrar logo
+    if (project.logoProject) {
+      const publicId = getPublicId(project.logoProject);
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     await Project.findByIdAndDelete(id);
 
     return NextResponse.json(
-      { message: "Proyecto e imágenes eliminados correctamente" },
+      { message: "Proyecto eliminado" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("DELETE PROJECT ERROR:", error);
-
     return NextResponse.json(
-      { error: "Error al eliminar el proyecto" },
+      {
+        error: "Error al eliminar",
+        details: error.message,
+      },
       { status: 500 }
     );
   }

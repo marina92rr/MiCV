@@ -97,7 +97,7 @@ export default function CardsProject({
                   }`}
               >
                 <img
-                  src={`/projects/${project.logoProject}`}
+                  src={project.logoProject}
                   alt={project.title}
                   className="block w-full h-full object-cover"
                   loading="lazy"

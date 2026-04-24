@@ -54,7 +54,7 @@ export default async function ProjectPage({ params }) {
         <FadeIn animation="fade-left">
           <picture className="rounded-xl my-5">
             <img
-              src={`/projects/${project.logoProject}`}
+              src={project.logoProject}
               alt={project.title}
               className="rounded-xl shadow-md"
               loading="lazy"
@@ -71,7 +71,7 @@ export default async function ProjectPage({ params }) {
         <FadeIn animation="fade-right">
           <picture className="rounded-xl my-10">
             <img
-              src={`/projects/${project.imageProject}`}
+              src={project.imageProject}
               alt={project.title}
               className="rounded-xl shadow-md"
               loading="lazy"
