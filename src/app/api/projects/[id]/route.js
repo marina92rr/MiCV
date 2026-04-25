@@ -54,11 +54,12 @@ export async function GET(request, { params }) {
 // PUT /api/projects/[id]
 export async function PUT(request, { params }) {
   try {
-    await connectDB();
-
+    await connectDB();  //Conectar a bbdd
+    //Recoger parámetros
     const { id } = await params;
     const body = await request.json();
 
+    //buscar proyecto por ID y actualizar datos
     const projectUpdate = await Project.findByIdAndUpdate(
       id,
       {
@@ -69,14 +70,14 @@ export async function PUT(request, { params }) {
       },
       { new: true }
     );
-
+    //Si no existe proyecto error
     if (!projectUpdate) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
         { status: 404 }
       );
     }
-
+    //Actualizar
     return NextResponse.json(projectUpdate, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -92,12 +93,14 @@ export async function PUT(request, { params }) {
 // DELETE /api/projects/[id]
 export async function DELETE(request, { params }) {
   try {
-    await connectDB();
+    await connectDB();  //Conectar a bbdd
 
-    const { id } = await params;
+    const { id } = await params;  //Recoger parámetro
 
+    //Buscar proyecto por ID
     const project = await Project.findById(id);
 
+    //Si no existe error
     if (!project) {
       return NextResponse.json(
         { error: "Proyecto no encontrado" },
@@ -105,6 +108,7 @@ export async function DELETE(request, { params }) {
       );
     }
 
+    //Si existe imagen en cloudinary eliminarla
     if (project.imageProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.imageProject);
 
@@ -112,7 +116,7 @@ export async function DELETE(request, { params }) {
         await cloudinary.uploader.destroy(publicId);
       }
     }
-
+    //Si existe logo en cloudinary eliminarla
     if (project.logoProject?.includes("res.cloudinary.com")) {
       const publicId = getPublicId(project.logoProject);
 
@@ -120,7 +124,7 @@ export async function DELETE(request, { params }) {
         await cloudinary.uploader.destroy(publicId);
       }
     }
-
+    //Encontrar proyecto y eliminar
     await Project.findByIdAndDelete(id);
 
     return NextResponse.json(

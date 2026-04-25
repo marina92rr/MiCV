@@ -40,7 +40,7 @@ export default function CardsProject({
             animation={reverse ? "fade-right" : "fade-left"}
           >
             {/* Card del proyecto */}
-            <div className="grid overflow-hidden bg-white shadow-md rounded-3xl hover:shadow-lg transition lg:grid-cols-2 lg:h-[320px]">              {/* Bloque de texto */}
+            <div className="grid overflow-hidden bg-white shadow-md rounded-3xl hover:shadow-lg transition lg:grid-cols-2 lg:h-80">              {/* Bloque de texto */}
               <div
                 className={`p-7 flex flex-col justify-center ${reverse
                   ? "lg:order-2 lg:items-end lg:text-right"
