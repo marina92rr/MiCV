@@ -22,7 +22,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// 2️⃣ Helper
+// Helper
 async function uploadToCloudinary(file, folder) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -42,7 +42,6 @@ async function uploadToCloudinary(file, folder) {
 }
 
 // GET /api/projects --> Devuelve todos los proyectos
-// GET /api/projects
 export async function GET() {
   try {
     await connectDB();
@@ -65,7 +64,7 @@ export async function GET() {
           : [],
         userId: obj.userId?.name || null,
 
-        // Ya son URLs completas de Cloudinary
+        //URLs de Cloudinary
         imageProject: obj.imageProject,
         logoProject: obj.logoProject,
       };

@@ -1,7 +1,7 @@
 "use client";
 
 import useOpenClose from "@/hooks/useOpenClose";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { createPortal } from "react-dom";
 
@@ -10,14 +10,12 @@ export default function UpdateSkill({ skill, onUpdated }) {
   const { isOpen, open, close, contentRef } = useOpenClose(); // Hook abrir/cerrar modal
 
   const [loading, setLoading] = useState(false); // Estado de carga
-  const [mounted, setMounted] = useState(false); // Detectar cliente para portal
+  const [mounted, setMounted] = useState(false); // Detectar cliente
 
   // Evitar errores de SSR en Next.js - modal
-  useState(() => {
-    if (typeof window !== "undefined") {
-      setMounted(true);
-    }
-  });
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Enviar datos actualizados
   async function handleSubmit(e) {
